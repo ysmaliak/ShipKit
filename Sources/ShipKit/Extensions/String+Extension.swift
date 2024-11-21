@@ -2,9 +2,9 @@ import Foundation
 import SwiftUI
 
 extension String {
-    static let emptyString = ""
+    public static let emptyString = ""
 }
 
 extension LocalizedStringKey {
-    static let emptyString = ""
+    public static let emptyString = ""
 }

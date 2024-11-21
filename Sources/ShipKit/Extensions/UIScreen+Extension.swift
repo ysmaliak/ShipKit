@@ -1,14 +1,14 @@
 import UIKit
 
 extension UIScreen {
-    static var current: UIScreen? {
+    public static var current: UIScreen? {
         UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first?
             .screen
     }
 
-    static var size: CGSize {
+    public static var size: CGSize {
         guard let screen = current else {
             return .zero
         }
@@ -20,11 +20,11 @@ extension UIScreen {
         }
     }
 
-    static var width: CGFloat {
+    public static var width: CGFloat {
         size.width
     }
 
-    static var height: CGFloat {
+    public static var height: CGFloat {
         size.height
     }
 }

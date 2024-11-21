@@ -3,20 +3,20 @@ import MessageUI
 import SwiftUI
 
 @Reducer
-struct MailComposerFeature {
-    struct State: Equatable {
-        let recipient: String
-        let subject: String
-        let body: String
+public struct MailComposerFeature {
+    public struct State: Equatable {
+        public let recipient: String
+        public let subject: String
+        public let body: String
     }
 
-    enum Action {
+    public enum Action {
         case dismiss
     }
 
-    @Dependency(\.dismiss) var dismiss
+    @Dependency(\.dismiss) private var dismiss
 
-    var body: some ReducerOf<Self> {
+    public var body: some ReducerOf<Self> {
         Reduce { _, action in
             switch action {
             case .dismiss:
@@ -26,10 +26,10 @@ struct MailComposerFeature {
     }
 }
 
-struct MailComposerView: UIViewControllerRepresentable {
+public struct MailComposerView: UIViewControllerRepresentable {
     let store: StoreOf<MailComposerFeature>
 
-    func makeUIViewController(context: Context) -> MFMailComposeViewController {
+    public func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let viewStore = ViewStore(store, observe: { $0 })
         let vc = MFMailComposeViewController()
         configureMailComposer(vc, with: viewStore)
@@ -37,9 +37,9 @@ struct MailComposerView: UIViewControllerRepresentable {
         return vc
     }
 
-    func updateUIViewController(_: MFMailComposeViewController, context _: Context) {}
+    public func updateUIViewController(_: MFMailComposeViewController, context _: Context) {}
 
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         Coordinator(store: store)
     }
 
@@ -54,37 +54,41 @@ struct MailComposerView: UIViewControllerRepresentable {
 }
 
 extension MailComposerView {
-    class Coordinator: NSObject, @preconcurrency MFMailComposeViewControllerDelegate {
+    public class Coordinator: NSObject, @preconcurrency MFMailComposeViewControllerDelegate {
         let store: StoreOf<MailComposerFeature>
 
-        init(store: StoreOf<MailComposerFeature>) {
+        public init(store: StoreOf<MailComposerFeature>) {
             self.store = store
         }
 
-        @MainActor func mailComposeController(_: MFMailComposeViewController, didFinishWith _: MFMailComposeResult, error _: Error?) {
+        @MainActor public func mailComposeController(
+            _: MFMailComposeViewController,
+            didFinishWith _: MFMailComposeResult,
+            error _: Error?
+        ) {
             store.send(.dismiss)
         }
     }
 }
 
-enum MailComposerError: LocalizedError, Equatable {
+public enum MailComposerError: LocalizedError, Equatable {
     case failedToCompose
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .failedToCompose:
             String(localizable: .mailFailedToCompose)
         }
     }
 
-    var failureReason: String? {
+    public var failureReason: String? {
         switch self {
         case .failedToCompose:
             String(localizable: .mailFailedToComposeReason)
         }
     }
 
-    var recoverySuggestion: String? {
+    public var recoverySuggestion: String? {
         switch self {
         case .failedToCompose:
             String(localizable: .mailFailedToComposeRecovery)

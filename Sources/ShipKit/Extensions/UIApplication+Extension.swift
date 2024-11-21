@@ -1,7 +1,7 @@
 import UIKit
 
 extension UIApplication {
-    var keyWindow: UIWindow? {
+    public var keyWindow: UIWindow? {
         UIApplication.shared.connectedScenes
             .filter { $0.activationState == .foregroundActive }
             .first(where: { $0 is UIWindowScene })

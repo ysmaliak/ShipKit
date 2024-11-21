@@ -9,7 +9,7 @@ import SwiftUI
 #endif
 
 extension Color {
-    init(hex: String) {
+    public init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
@@ -33,7 +33,7 @@ extension Color {
 
 @available(macOS 12.0, *)
 extension Color {
-    init(light: Color, dark: Color) {
+    public init(light: Color, dark: Color) {
         #if canImport(UIKit)
             self.init(light: UIColor(light), dark: UIColor(dark))
         #else
@@ -42,7 +42,7 @@ extension Color {
     }
 
     #if canImport(UIKit)
-        init(light: UIColor, dark: UIColor) {
+        public init(light: UIColor, dark: UIColor) {
             #if os(watchOS)
                 self.init(uiColor: dark)
             #else
@@ -60,7 +60,7 @@ extension Color {
     #endif
 
     #if canImport(AppKit)
-        init(light: NSColor, dark: NSColor) {
+        public init(light: NSColor, dark: NSColor) {
             self.init(nsColor: NSColor(name: nil, dynamicProvider: { appearance in
                 switch appearance.name {
                 case .aqua,
@@ -83,7 +83,7 @@ extension Color {
 }
 
 extension UIColor {
-    convenience init(hex: String) {
+    public convenience init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)

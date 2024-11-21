@@ -1,5 +1,5 @@
 {
-  "originHash" : "056cb93bfd9d4e1903f0dffb0439ca9d471b115a86cd8d37c115eead1ca8ca73",
+  "originHash" : "05a666a16d7c85c94c65177bea931cf27d4cd9c07986f54ebf457c1b37a27e60",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -24,16 +24,16 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "7b2855bbe96980952c9ebe686df1ead1b38f1f11",
-        "version" : "5.9.0"
+        "revision" : "0cba1063bbb8366fd6868ed85b533e2d68004d23",
+        "version" : "5.10.0"
       }
     },
     {
       "identity" : "revenuecatutilities",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ysmaliak/RevenueCatUtilities",
+      "location" : "https://github.com/ysmaliak/RevenueCatUtilities.git",
       "state" : {
-        "revision" : "c48a6cddf94fe6bd7622214989d3b0a38c2e6dcd",
+        "revision" : "79f178c3c3303ce20baea3a80b3bb22df16ef424",
         "version" : "1.0.0"
       }
     },
@@ -76,7 +76,7 @@
     {
       "identity" : "swift-composable-architecture",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-composable-architecture",
+      "location" : "https://github.com/pointfreeco/swift-composable-architecture.git",
       "state" : {
         "revision" : "69247baf7be2fd6f5820192caef0082d01849cd0",
         "version" : "1.16.1"
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/liamnichols/xcstrings-tool-plugin.git",
       "state" : {
-        "revision" : "e99d6ad477aaf87d5808997b09ad0accb420a25e",
-        "version" : "0.5.2"
+        "revision" : "448890f1c47c0d70b6e539341f623c33bd1385af",
+        "version" : "1.0.0"
       }
     },
     {

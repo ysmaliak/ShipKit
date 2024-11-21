@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct LinksView: View {
-    let termsOfServiceURL: URL
-    let privacyPolicyURL: URL
+public struct LinksView: View {
+    public let termsOfServiceURL: URL
+    public let privacyPolicyURL: URL
 
-    var body: some View {
+    public var body: some View {
         Text(attributedString)
             .font(.caption)
             .tint(.secondary)
