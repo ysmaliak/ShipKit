@@ -191,8 +191,7 @@ public struct SettingsFeature: Sendable {
 
     private func checkMailComposer() -> Effect<Action> {
         .run { send in
-//            await send(.mailComposerCheckCompleted(MFMailComposeViewController.canSendMail()))
-            await send(.mailComposerCheckCompleted(false))
+            await send(.mailComposerCheckCompleted(MFMailComposeViewController.canSendMail()))
         }
     }
 
