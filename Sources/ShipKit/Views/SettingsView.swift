@@ -50,9 +50,9 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
         case .restorePurchase:
             String(localizable: .restorePurchaseSettingsOption)
         case .privacyPolicy:
-            "String(localizable: .privacyPolicy)"
+            String(localizable: .privacyPolicy)
         case .termsOfService:
-            "String(localizable: .termsOfService)"
+            String(localizable: .termsOfService)
         }
     }
 
