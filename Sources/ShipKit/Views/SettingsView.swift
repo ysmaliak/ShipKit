@@ -68,7 +68,7 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
 }
 
 @Reducer
-public struct SettingsFeature {
+public struct SettingsFeature: Sendable {
     public struct EmailConfiguration: Equatable {
         public var recipient: String
         public var subject: String
@@ -143,7 +143,6 @@ public struct SettingsFeature {
                 case .termsOfService:
                     return .run { [termsOfServiceURL = state.termsOfServiceURL] _ in await openURL(termsOfServiceURL) }
                 }
-                return .none
 
             case .mailComposerCheckCompleted(let canSendMail):
                 if canSendMail {

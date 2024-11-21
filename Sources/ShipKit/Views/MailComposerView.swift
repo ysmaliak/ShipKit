@@ -3,7 +3,7 @@ import MessageUI
 import SwiftUI
 
 @Reducer
-public struct MailComposerFeature {
+public struct MailComposerFeature: Sendable {
     public struct State: Equatable {
         public let recipient: String
         public let subject: String
