@@ -6,6 +6,7 @@ import SFSafeSymbols
 import StoreKit
 import SwiftUI
 import Inject
+import ShipKitCore
 
 public enum SettingsSection: String, CaseIterable {
     case appearance
@@ -169,10 +170,7 @@ public struct SettingsFeature: Sendable {
                     ))
                 } else {
                     state.isPremiumUser = false
-                    state.destination = .alert(AlertState(
-                        title: { TextState(.localizable(.error)) },
-                        message: { TextState(PurchaseError.failedToRestore.localizedDescription) }
-                    ))
+                    state.destination = .alert(.error(PurchaseError.failedToRestore))
                 }
                 return .none
 

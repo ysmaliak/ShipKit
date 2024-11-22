@@ -1,7 +1,6 @@
 import Foundation
-import KeychainSwift
 
-public struct MultipartDataField {
+public struct MultipartDataField: Sendable {
     public let parameters: [String: String]
     public let data: Data
     public let mimeType: String?
@@ -26,15 +25,14 @@ public struct MultipartData {
         method: HTTPMethod,
         headers: [String: String]?,
         cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
-        timeoutInterval: TimeInterval? = 30
-    ) -> URLRequest {
+        timeoutInterval: TimeInterval? = 30,
+        retryPolicy: RetryPolicy = .default,
+        authenticationPolicy: AuthenticationPolicy = .none
+    ) async throws -> URLRequest {
         var urlRequest = URLRequest(url: url)
-
         urlRequest.cachePolicy = cachePolicy
-
-        if urlRequest.value(forHTTPHeaderField: "Authorization") == nil, let accessToken = TokenStorage.shared.token?.accessToken {
-            urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        }
+        
+        try await authenticationPolicy.provider.authenticate(&urlRequest)
 
         if let headers {
             for header in headers where urlRequest.value(forHTTPHeaderField: header.0) == nil {
