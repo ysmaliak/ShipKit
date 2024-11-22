@@ -5,6 +5,7 @@ import RevenueCatUtilities
 import SFSafeSymbols
 import StoreKit
 import SwiftUI
+import Inject
 
 public enum SettingsSection: String, CaseIterable {
     case appearance
@@ -213,12 +214,15 @@ public struct SettingsFeature: Sendable {
 public struct SettingsView: View {
     @Bindable public var store: StoreOf<SettingsFeature>
 
+    @ObserveInjection private var inject
+
     public var body: some View {
         listView
             .sheet(item: $store.scope(state: \.destination?.mailComposer, action: \.destination.mailComposer)) {
                 MailComposerView(store: $0)
             }
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
+            .enableInjection()
     }
 
     @ViewBuilder

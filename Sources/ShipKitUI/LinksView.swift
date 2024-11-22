@@ -1,8 +1,11 @@
 import SwiftUI
+import Inject
 
 public struct LinksView: View {
     public let termsOfServiceURL: URL
     public let privacyPolicyURL: URL
+
+    @ObserveInjection private var inject
 
     public var body: some View {
         Text(attributedString)
@@ -10,6 +13,7 @@ public struct LinksView: View {
             .tint(.secondary)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
+            .enableInjection()
     }
 
     var attributedString: AttributedString {
