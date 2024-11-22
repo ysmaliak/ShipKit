@@ -1,12 +1,12 @@
 import ComposableArchitecture
+import Inject
 import MessageUI
 import RevenueCat
 import RevenueCatUtilities
 import SFSafeSymbols
+import ShipKitCore
 import StoreKit
 import SwiftUI
-import Inject
-import ShipKitCore
 
 public enum SettingsSection: String, CaseIterable {
     case appearance

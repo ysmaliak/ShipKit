@@ -26,12 +26,12 @@ public struct MultipartData {
         headers: [String: String]?,
         cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
         timeoutInterval: TimeInterval? = 30,
-        retryPolicy: RetryPolicy = .default,
+        retryPolicy _: RetryPolicy = .default,
         authenticationPolicy: AuthenticationPolicy = .none
     ) async throws -> URLRequest {
         var urlRequest = URLRequest(url: url)
         urlRequest.cachePolicy = cachePolicy
-        
+
         try await authenticationPolicy.provider.authenticate(&urlRequest)
 
         if let headers {

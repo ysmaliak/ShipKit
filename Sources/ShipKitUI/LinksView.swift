@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 public struct LinksView: View {
     public let termsOfServiceURL: URL

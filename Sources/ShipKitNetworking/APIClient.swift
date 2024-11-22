@@ -1,27 +1,23 @@
 import Foundation
-import UIKit
-
-public enum APIError: Error, LocalizedError {
-    case invalidResponse
-    case httpError(response: HTTPURLResponse, data: Data)
-}
 
 public actor APIClient {
-    public struct Settings {
-        public var baseURL: URL?
-    }
-
-    public static var settings = Settings()
+    public static var configuration = APIConfiguration()
 
     private nonisolated let session: URLSession
-    private let decoder = JSONDecoder()
-    private let encoder = JSONEncoder()
-    private let cache = URLCache.shared
+    private let decoder: JSONDecoder
+    private let encoder: JSONEncoder
+    private let cache: URLCache
 
-    public init(configuration: URLSessionConfiguration = .default) {
+    public init(
+        configuration: URLSessionConfiguration = .default,
+        decoder: JSONDecoder = .iso8601,
+        encoder: JSONEncoder = .iso8601,
+        cache: URLCache = .shared
+    ) {
         session = URLSession(configuration: configuration)
-        decoder.dateDecodingStrategy = .iso8601
-        encoder.dateEncodingStrategy = .iso8601
+        self.decoder = decoder
+        self.encoder = encoder
+        self.cache = cache
     }
 
     @discardableResult

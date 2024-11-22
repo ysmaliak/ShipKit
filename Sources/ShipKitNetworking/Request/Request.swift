@@ -1,30 +1,6 @@
 import Foundation
 
-public typealias Body = Encodable & Sendable
-
 public struct Request<Response: Decodable>: Sendable {
-    public enum RequestError: Error, LocalizedError {
-        case invalidURL
-        case invalidParameters
-        case missingBaseURL
-
-        public var errorDescription: String? {
-            switch self {
-            case .invalidURL:
-                NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
-            case .invalidParameters:
-                NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
-            case .missingBaseURL:
-                NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
-            }
-        }
-    }
-
-    public enum ContentType: Sendable {
-        case json
-        case multipartData([MultipartDataField])
-    }
-
     public let method: HTTPMethod
     public let baseURL: URL?
     public let path: String
@@ -33,20 +9,20 @@ public struct Request<Response: Decodable>: Sendable {
     public let query: [String: String]?
     public let headers: [String: String]?
     public let body: Body?
-    public let cachePolicy: URLRequest.CachePolicy
     public let timeoutInterval: TimeInterval?
+    public let cachePolicy: URLRequest.CachePolicy
     public let authenticationPolicy: AuthenticationPolicy
 
     public init(
         method: HTTPMethod,
-        baseURL: URL? = APIClient.settings.baseURL,
+        baseURL: URL? = APIClient.configuration.baseURL,
         path: String,
         contentType: ContentType,
         query: [String: String]? = nil,
         headers: [String: String]? = nil,
         body: Body? = nil,
-        cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
         timeoutInterval: TimeInterval? = 30,
+        cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
         authenticationPolicy: AuthenticationPolicy = .none
     ) {
         self.method = method
@@ -57,8 +33,8 @@ public struct Request<Response: Decodable>: Sendable {
         self.query = query
         self.headers = headers
         self.body = body
-        self.cachePolicy = cachePolicy
         self.timeoutInterval = timeoutInterval
+        self.cachePolicy = cachePolicy
         self.authenticationPolicy = authenticationPolicy
     }
 
@@ -69,8 +45,8 @@ public struct Request<Response: Decodable>: Sendable {
         query: [String: String]? = nil,
         headers: [String: String]? = nil,
         body: Body? = nil,
-        cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
         timeoutInterval: TimeInterval? = 30,
+        cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData,
         authenticationPolicy: AuthenticationPolicy = .none
     ) {
         self.method = method
@@ -81,8 +57,8 @@ public struct Request<Response: Decodable>: Sendable {
         self.query = query
         self.headers = headers
         self.body = body
-        self.cachePolicy = cachePolicy
         self.timeoutInterval = timeoutInterval
+        self.cachePolicy = cachePolicy
         self.authenticationPolicy = authenticationPolicy
     }
 
@@ -173,137 +149,11 @@ public struct Request<Response: Decodable>: Sendable {
     }
 }
 
-public struct RetryPolicy {
-    public var strategy: RetryStrategy
-    public var maxRetries: Int
-    public var currentAttempt: Int
+extension Request {
+    public typealias Body = Encodable & Sendable
 
-    public init(
-        strategy: RetryStrategy = DefaultRetryStrategy(),
-        maxRetries: Int = 3
-    ) {
-        self.strategy = strategy
-        self.maxRetries = maxRetries
-        currentAttempt = 0
-    }
-}
-
-public struct AuthenticationPolicy: Sendable {
-    public var provider: AuthenticationProvider
-
-    public init(provider: AuthenticationProvider) {
-        self.provider = provider
-    }
-}
-
-extension JSONEncoder {
-    fileprivate static let defaultRequestEncoder = JSONEncoder()
-}
-
-public protocol AuthenticationProvider: Sendable {
-    func authenticate(_ request: inout URLRequest) async throws
-    func handleAuthenticationFailure(_ response: HTTPURLResponse) async throws -> Bool
-}
-
-public protocol RetryStrategy {
-    func shouldRetry(_ error: Error, attempt: Int) -> Bool
-    func delay(forAttempt attempt: Int) -> TimeInterval
-}
-
-public struct DefaultRetryStrategy: RetryStrategy {
-    private let baseDelay: TimeInterval
-    private let multiplier: Double
-    private let retryableStatusCodes: Set<Int>
-
-    public init(
-        baseDelay: TimeInterval = 0.3,
-        multiplier: Double = 1.0,
-        retryableStatusCodes: Set<Int> = [408, 500, 502, 503, 504]
-    ) {
-        self.baseDelay = baseDelay
-        self.multiplier = multiplier
-        self.retryableStatusCodes = retryableStatusCodes
-    }
-
-    public func shouldRetry(_ error: Error, attempt _: Int) -> Bool {
-        guard let urlError = error as? URLError else {
-            return false
-        }
-
-        switch urlError.code {
-        case .timedOut, .networkConnectionLost:
-            return true
-        default:
-            if let response = urlError.errorUserInfo[NSUnderlyingErrorKey] as? HTTPURLResponse {
-                return retryableStatusCodes.contains(response.statusCode)
-            }
-            return false
-        }
-    }
-
-    public func delay(forAttempt attempt: Int) -> TimeInterval {
-        baseDelay * pow(multiplier, Double(attempt - 1))
-    }
-}
-//
-//public struct BearerTokenAuthProvider: AuthenticationProvider {
-//    private let tokenStorage: TokenStorage
-//
-//    public init(tokenStorage: TokenStorage = .shared) {
-//        self.tokenStorage = tokenStorage
-//    }
-//
-//    public func authenticate(_ request: inout URLRequest) async throws {
-//        guard let token = tokenStorage.token?.accessToken else { return }
-//        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//    }
-//
-//    public func handleAuthenticationFailure(_ error: Error) async throws -> Bool {
-//        guard let response = (error as? URLError)?.errorUserInfo[NSUnderlyingErrorKey] as? HTTPURLResponse,
-//              response.statusCode == 401 || response.statusCode == 403 else {
-//            return false
-//        }
-//
-//        // Here you can implement token refresh logic
-//        // Return true if token was refreshed successfully
-//        return false
-//    }
-//}
-
-public struct NoRetryStrategy: RetryStrategy {
-    public init() {}
-
-    public func shouldRetry(_: Error, attempt _: Int) -> Bool {
-        false
-    }
-
-    public func delay(forAttempt _: Int) -> TimeInterval {
-        0
-    }
-}
-
-public struct NoAuthProvider: AuthenticationProvider {
-    public init() {}
-
-    public func authenticate(_: inout URLRequest) async throws {}
-
-    public func handleAuthenticationFailure(_: HTTPURLResponse) async throws -> Bool {
-        false
-    }
-}
-
-extension RetryPolicy {
-    public static var none: Self {
-        RetryPolicy(strategy: NoRetryStrategy(), maxRetries: 0)
-    }
-
-    public static var `default`: Self {
-        RetryPolicy(strategy: DefaultRetryStrategy(), maxRetries: 3)
-    }
-}
-
-extension AuthenticationPolicy {
-    public static var none: Self {
-        AuthenticationPolicy(provider: NoAuthProvider())
+    public enum ContentType: Sendable {
+        case json
+        case multipartData([MultipartDataField])
     }
 }
