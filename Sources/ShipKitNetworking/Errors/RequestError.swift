@@ -4,15 +4,37 @@ public enum RequestError: Error, LocalizedError {
     case invalidURL
     case invalidParameters
     case missingBaseURL
-
+    
     public var errorDescription: String? {
         switch self {
         case .invalidURL:
-            NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
+            return String(localizable: .requestErrorInvalidURLDescription)
         case .invalidParameters:
-            NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
+            return String(localizable: .requestErrorInvalidParametersDescription)
         case .missingBaseURL:
-            NSLocalizedString("Error.SomethingWentWrong", bundle: Bundle.module, comment: "")
+            return String(localizable: .requestErrorMissingBaseURLDescription)
+        }
+    }
+    
+    public var failureReason: String? {
+        switch self {
+        case .invalidURL:
+            return String(localizable: .requestErrorInvalidURLReason)
+        case .invalidParameters:
+            return String(localizable: .requestErrorInvalidParametersReason)
+        case .missingBaseURL:
+            return String(localizable: .requestErrorMissingBaseURLReason)
+        }
+    }
+    
+    public var recoverySuggestion: String? {
+        switch self {
+        case .invalidURL:
+            return String(localizable: .requestErrorInvalidURLSuggestion)
+        case .invalidParameters:
+            return String(localizable: .requestErrorInvalidParametersSuggestion)
+        case .missingBaseURL:
+            return String(localizable: .requestErrorMissingBaseURLSuggestion)
         }
     }
 }
