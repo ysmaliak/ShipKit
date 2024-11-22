@@ -1,0 +1,126 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+      "errorInvalidResponse" : {
+        "comment" : "Shown when API response is invalid",
+        "extractionState" : "manual",
+        "localizations" : {
+          "de" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+            }
+          },
+          "en" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Something went wrong. Please try again."
+            }
+          },
+          "es" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Algo salió mal. Por favor, inténtelo de nuevo."
+            }
+          },
+          "fr" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Une erreur s'est produite. Veuillez réessayer."
+            }
+          },
+          "it" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Qualcosa è andato storto. Per favore riprova."
+            }
+          },
+          "nl" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Er is iets misgegaan. Probeer het opnieuw."
+            }
+          },
+          "pl" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Coś poszło nie tak. Proszę spróbować ponownie."
+            }
+          },
+          "pt-BR" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Algo deu errado. Por favor, tente novamente."
+            }
+          },
+          "pt-PT" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Algo correu mal. Por favor, tente novamente."
+            }
+          }
+        }
+      },
+      "errorHttpStatus" : {
+        "comment" : "Shown when API returns error status code",
+        "extractionState" : "manual",
+        "localizations" : {
+          "de" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Server meldete Fehlerstatuscode: %d"
+            }
+          },
+          "en" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Server returned error status code: %d"
+            }
+          },
+          "es" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "El servidor devolvió el código de error: %d"
+            }
+          },
+          "fr" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Le serveur a renvoyé le code d'erreur : %d"
+            }
+          },
+          "it" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Il server ha restituito il codice di errore: %d"
+            }
+          },
+          "nl" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Server retourneerde foutcode: %d"
+            }
+          },
+          "pl" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Serwer zwrócił kod błędu: %d"
+            }
+          },
+          "pt-BR" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "O servidor retornou o código de erro: %d"
+            }
+          },
+          "pt-PT" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "O servidor devolveu o código de erro: %d"
+            }
+          }
+        }
+      }
+  },
+  "version" : "1.0"
+}

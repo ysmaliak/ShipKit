@@ -56,8 +56,8 @@ let package = Package(
         ),
         .target(
             name: "ShipKitNetworking",
-            dependencies: [
-                "ShipKitCore"
+            resources: [
+                .process("Resources/Localizable.xcstrings")
             ]
         )
     ]
