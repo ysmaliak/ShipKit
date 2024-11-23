@@ -2,7 +2,7 @@ import Foundation
 
 public enum APIError: Error, LocalizedError {
     case invalidResponse
-    case httpError
+    case httpError(response: HTTPURLResponse, data: Data)
     
     public var errorDescription: String? {
         switch self {

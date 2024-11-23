@@ -3,22 +3,12 @@ import Foundation
 public actor APIClient {
     public static var configuration = APIConfiguration()
 
-    private nonisolated let session: URLSession
-    private let decoder: JSONDecoder
-    private let encoder: JSONEncoder
-    private let cache: URLCache
-
-    public init(
-        configuration: URLSessionConfiguration = .default,
-        decoder: JSONDecoder = .iso8601,
-        encoder: JSONEncoder = .iso8601,
-        cache: URLCache = .shared
-    ) {
-        session = URLSession(configuration: configuration)
-        self.decoder = decoder
-        self.encoder = encoder
-        self.cache = cache
+    private var session: URLSession {
+        URLSession(configuration: APIClient.configuration.urlSessionConfiguration)
     }
+    private var decoder: JSONDecoder { APIClient.configuration.decoder }
+    private var encoder: JSONEncoder { APIClient.configuration.encoder }
+    private var cache: URLCache { APIClient.configuration.cache }
 
     @discardableResult
     public func send<T: Decodable & Sendable>(

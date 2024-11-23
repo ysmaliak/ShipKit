@@ -98,7 +98,7 @@ public struct Request<Response: Decodable>: Sendable {
         try await authenticationPolicy.provider.authenticate(&urlRequest)
 
         if let body {
-            urlRequest.httpBody = try JSONEncoder.defaultRequestEncoder.encode(body)
+            urlRequest.httpBody = try APIClient.configuration.encoder.encode(body)
 
             if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
                 urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
