@@ -7,23 +7,42 @@
 
 import SwiftUI
 
+public struct ButtonConfiguration {
+    public let font: Font
+    public let background: Color
+    public let foreground: Color
+    public let pressedOpacity: Double
+    
+    public init(
+        font: Font = .title3.weight(.semibold),
+        background: Color,
+        foreground: Color,
+        pressedOpacity: Double = 0.8
+    ) {
+        self.font = font
+        self.background = background
+        self.foreground = foreground
+        self.pressedOpacity = pressedOpacity
+    }
+}
+
 struct CapsuleButtonStyle: ButtonStyle {
+    public let buttonConfiguration: ButtonConfiguration
     @State private var isPressed = false
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.title3)
-            .fontWeight(.semibold)
+            .font(buttonConfiguration.font)
             .multilineTextAlignment(.center)
-            .foregroundStyle(.background)
+            .foregroundStyle(buttonConfiguration.foreground)
             .frame(maxWidth: .infinity)
             .padding(.horizontal)
             .padding(.vertical, 20)
             .background(
                 Capsule()
-                    .fill(Color.primary)
+                    .fill(buttonConfiguration.background)
             )
-            .opacity(isPressed ? 0.8 : 1.0)
+            .opacity(isPressed ? buttonConfiguration.pressedOpacity : 1.0)
             .animation(.easeInOut(duration: 0.2), value: isPressed)
             .onChange(of: configuration.isPressed) { _, newValue in
                 isPressed = newValue
@@ -32,41 +51,7 @@ struct CapsuleButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == CapsuleButtonStyle {
-    static var capsule: CapsuleButtonStyle {
-        CapsuleButtonStyle()
-    }
-}
-
-struct ReversedCapsuleButtonStyle: ButtonStyle {
-    @State private var isPressed = false
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.title3)
-            .fontWeight(.semibold)
-            .multilineTextAlignment(.center)
-            .foregroundStyle(Color.primary)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal)
-            .padding(.vertical, 20)
-            .background(
-                Capsule()
-                    .fill(Color.primary)
-                    .overlay(
-                        Capsule()
-                            .strokeBorder(Color.primary, lineWidth: 2)
-                    )
-            )
-            .opacity(isPressed ? 0.8 : 1.0)
-            .animation(.easeInOut(duration: 0.2), value: isPressed)
-            .onChange(of: configuration.isPressed) { _, newValue in
-                isPressed = newValue
-            }
-    }
-}
-
-extension ButtonStyle where Self == ReversedCapsuleButtonStyle {
-    static var reversedCapsule: ReversedCapsuleButtonStyle {
-        ReversedCapsuleButtonStyle()
+    static func capsule(_ configuration: ButtonConfiguration) -> CapsuleButtonStyle {
+        CapsuleButtonStyle(buttonConfiguration: configuration)
     }
 }

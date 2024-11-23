@@ -152,9 +152,10 @@ public struct PaywallFeature: Sendable {
     }
 }
 
-public struct PaywallView<Content: View>: View {
+public struct PaywallView<Content: View, SubscribeButtonStyle: ButtonStyle>: View {
     @Bindable public var store: StoreOf<PaywallFeature>
-    public var content: (() -> Content)?
+    public let subscribeButtonStyle: SubscribeButtonStyle
+    public let content: () -> Content
 
     @ObserveInjection private var inject
 
@@ -186,9 +187,7 @@ public struct PaywallView<Content: View>: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
                         VStack {
-                            if let content {
-                                content()
-                            }
+                            content()
 
                             packagesView
                         }
@@ -292,7 +291,7 @@ public struct PaywallView<Content: View>: View {
                     }
                 }
             }
-            .buttonStyle(.capsule)
+            .buttonStyle(subscribeButtonStyle)
             .opacity(store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading ? 0.8 : 1.0)
             .disabled(store.isSubscribeButtonLoading || store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading)
         }
