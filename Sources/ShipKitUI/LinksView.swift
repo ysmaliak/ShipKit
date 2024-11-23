@@ -2,8 +2,8 @@ import Inject
 import SwiftUI
 
 public struct LinksView: View {
-    public let termsOfServiceURL: URL
     public let privacyPolicyURL: URL
+    public let termsOfServiceURL: URL
 
     @ObserveInjection private var inject
 
@@ -17,11 +17,11 @@ public struct LinksView: View {
     }
 
     var attributedString: AttributedString {
-        var termsOfService = try! AttributedString(markdown: String(localizable: .termsOfServiceLink(termsOfServiceURL.absoluteString)))
-        termsOfService.underlineStyle = .single
-        let and = AttributedString(String(localizable: .and))
         var privacyPolicy = try! AttributedString(markdown: String(localizable: .privacyPolicyLink(privacyPolicyURL.absoluteString)))
         privacyPolicy.underlineStyle = .single
-        return termsOfService + " " + and + " " + privacyPolicy
+        let and = AttributedString(String(localizable: .and))
+        var termsOfService = try! AttributedString(markdown: String(localizable: .termsOfServiceLink(termsOfServiceURL.absoluteString)))
+        termsOfService.underlineStyle = .single
+        return privacyPolicy + " " + and + " " + termsOfService
     }
 }

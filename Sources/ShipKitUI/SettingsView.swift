@@ -93,9 +93,9 @@ public struct SettingsFeature: Sendable {
             SettingsItem(type: .termsOfService, section: .legal, indicator: .symbol(.arrowUpRight))
         ]
         public var isPremiumUser = false
+        public let premiumEntitlement: String
         public let emailConfiguration: EmailConfiguration
         public let appID: String
-        public let premiumEntitlement: String
         public let privacyPolicyURL: URL
         public let termsOfServiceURL: URL
         @Presents public var destination: Destination.State?
@@ -114,10 +114,15 @@ public struct SettingsFeature: Sendable {
     public enum Action {
         public enum Alert {}
 
+        public enum Delegate {
+            case premiumUserStatusChanged(Bool)
+        }
+
         case itemSelected(id: SettingsItem.ID)
         case mailComposerCheckCompleted(Bool)
         case purchaseRestored(Result<CustomerInfo, Error>)
         case destination(PresentationAction<Destination.Action>)
+        case delegate(Delegate)
     }
 
     @Dependency(\.openURL) private var openURL
@@ -162,17 +167,20 @@ public struct SettingsFeature: Sendable {
                 if let index = state.settingsItems.firstIndex(where: { $0.type == .restorePurchase }) {
                     state.settingsItems[index].indicator = .none
                 }
+                var premiumUserStatusChangedEffect: Effect<Action> = .none
                 if customerInfo.entitlements[state.premiumEntitlement]?.isActive == true {
                     state.isPremiumUser = true
+                    premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(true)))
                     state.destination = .alert(AlertState(
                         title: { TextState(.localizable(.success)) },
                         message: { TextState(.localizable(.purchasesRestored)) }
                     ))
                 } else {
                     state.isPremiumUser = false
+                    premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(false)))
                     state.destination = .alert(.error(PurchaseError.failedToRestore))
                 }
-                return .none
+                return premiumUserStatusChangedEffect
 
             case .purchaseRestored(.failure(let error)):
                 if let index = state.settingsItems.firstIndex(where: { $0.type == .restorePurchase }) {
@@ -181,7 +189,7 @@ public struct SettingsFeature: Sendable {
                 state.destination = .alert(.error(error))
                 return .none
 
-            case .destination:
+            case .destination, .delegate:
                 return .none
             }
         }

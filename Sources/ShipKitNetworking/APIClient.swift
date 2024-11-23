@@ -6,6 +6,7 @@ public actor APIClient {
     private var session: URLSession {
         URLSession(configuration: APIClient.configuration.urlSessionConfiguration)
     }
+
     private var decoder: JSONDecoder { APIClient.configuration.decoder }
     private var encoder: JSONEncoder { APIClient.configuration.encoder }
     private var cache: URLCache { APIClient.configuration.cache }

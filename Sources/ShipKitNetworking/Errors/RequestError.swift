@@ -4,37 +4,37 @@ public enum RequestError: Error, LocalizedError {
     case invalidURL
     case invalidParameters
     case missingBaseURL
-    
+
     public var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return String(localizable: .requestErrorInvalidURLDescription)
+            String(localizable: .requestErrorInvalidURLDescription)
         case .invalidParameters:
-            return String(localizable: .requestErrorInvalidParametersDescription)
+            String(localizable: .requestErrorInvalidParametersDescription)
         case .missingBaseURL:
-            return String(localizable: .requestErrorMissingBaseURLDescription)
+            String(localizable: .requestErrorMissingBaseURLDescription)
         }
     }
-    
+
     public var failureReason: String? {
         switch self {
         case .invalidURL:
-            return String(localizable: .requestErrorInvalidURLReason)
+            String(localizable: .requestErrorInvalidURLReason)
         case .invalidParameters:
-            return String(localizable: .requestErrorInvalidParametersReason)
+            String(localizable: .requestErrorInvalidParametersReason)
         case .missingBaseURL:
-            return String(localizable: .requestErrorMissingBaseURLReason)
+            String(localizable: .requestErrorMissingBaseURLReason)
         }
     }
-    
+
     public var recoverySuggestion: String? {
         switch self {
         case .invalidURL:
-            return String(localizable: .requestErrorInvalidURLSuggestion)
+            String(localizable: .requestErrorInvalidURLSuggestion)
         case .invalidParameters:
-            return String(localizable: .requestErrorInvalidParametersSuggestion)
+            String(localizable: .requestErrorInvalidParametersSuggestion)
         case .missingBaseURL:
-            return String(localizable: .requestErrorMissingBaseURLSuggestion)
+            String(localizable: .requestErrorMissingBaseURLSuggestion)
         }
     }
 }
