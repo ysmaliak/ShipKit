@@ -13,7 +13,7 @@ import Foundation
 /// // Create a custom retry policy
 /// let customPolicy = RetryPolicy(strategy: ExponentialBackoffStrategy(), maxRetries: 5)
 /// ```
-public struct RetryPolicy {
+public struct RetryPolicy: Sendable {
     /// The strategy that determines the delay between retry attempts
     public var strategy: RetryStrategy
 

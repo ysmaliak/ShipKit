@@ -5,7 +5,7 @@ import Foundation
 /// A retry strategy determines two key aspects of retry behavior:
 /// 1. Whether a particular error should trigger a retry
 /// 2. How long to wait before the next retry attempt
-public protocol RetryStrategy {
+public protocol RetryStrategy: Sendable {
     /// Determines if a retry should be attempted based on the error and attempt number.
     /// - Parameters:
     ///   - error: The error that occurred during the request
