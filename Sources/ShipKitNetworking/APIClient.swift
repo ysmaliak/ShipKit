@@ -39,7 +39,10 @@ public actor APIClient {
                response.statusCode == 403 || response.statusCode == 401 {
                 var retryPolicy = retryPolicy
                 retryPolicy.currentAttempt += 1
-                guard try await request.authenticationPolicy.provider.handleAuthenticationFailure(response) else { throw error }
+                guard try await request.authenticationPolicy.provider.attemptAuthenticationRecovery(
+                    for: response,
+                    responseData: data
+                ) else { throw error }
                 return try await upload(for: request, from: data, retryPolicy: retryPolicy)
             } else if retryPolicy.strategy.shouldRetry(error, attempt: retryPolicy.currentAttempt) {
                 var retryPolicy = retryPolicy
@@ -68,7 +71,10 @@ public actor APIClient {
                response.statusCode == 403 || response.statusCode == 401 {
                 var retryPolicy = retryPolicy
                 retryPolicy.currentAttempt += 1
-                guard try await request.authenticationPolicy.provider.handleAuthenticationFailure(response) else { throw error }
+                guard try await request.authenticationPolicy.provider.attemptAuthenticationRecovery(
+                    for: response,
+                    responseData: data
+                ) else { throw error }
                 return try await self.data(for: request, retryPolicy: retryPolicy)
             } else if retryPolicy.strategy.shouldRetry(error, attempt: retryPolicy.currentAttempt) {
                 var retryPolicy = retryPolicy
@@ -137,7 +143,10 @@ public actor APIClient {
                response.statusCode == 403 || response.statusCode == 401 {
                 var retryPolicy = retryPolicy
                 retryPolicy.currentAttempt += 1
-                guard try await request.authenticationPolicy.provider.handleAuthenticationFailure(response) else { throw error }
+                guard try await request.authenticationPolicy.provider.attemptAuthenticationRecovery(
+                    for: response,
+                    responseData: data
+                ) else { throw error }
                 return try await defaultSend(request, cached: cached, retryPolicy: retryPolicy)
             } else if retryPolicy.strategy.shouldRetry(error, attempt: retryPolicy.currentAttempt) {
                 var retryPolicy = retryPolicy

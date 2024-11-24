@@ -14,7 +14,13 @@ public struct AuthenticationPolicy: Sendable {
 
 public protocol AuthenticationProvider: Sendable {
     func authenticate(_ request: inout URLRequest) async throws
-    func handleAuthenticationFailure(_ response: HTTPURLResponse) async throws -> Bool
+
+    /// Attempts to recover from an authentication error, typically by refreshing the auth token
+    /// - Parameters:
+    ///   - response: The HTTP response that triggered the authentication failure
+    ///   - data: The response data that might contain error details
+    /// - Returns: True if recovery was successful and the request should be retried
+    func attemptAuthenticationRecovery(for response: HTTPURLResponse, responseData: Data?) async throws -> Bool
 }
 
 public struct NoAuthProvider: AuthenticationProvider {
@@ -22,7 +28,7 @@ public struct NoAuthProvider: AuthenticationProvider {
 
     public func authenticate(_: inout URLRequest) async throws {}
 
-    public func handleAuthenticationFailure(_: HTTPURLResponse) async throws -> Bool {
+    public func attemptAuthenticationRecovery(for _: HTTPURLResponse, responseData _: Data?) async throws -> Bool {
         false
     }
 }

@@ -41,7 +41,8 @@ let package = Package(
             name: "ShipKit",
             dependencies: [
                 "ShipKitCore",
-                "ShipKitNetworking"
+                "ShipKitNetworking",
+                "ShipKitUI"
             ]
         ),
         .target(

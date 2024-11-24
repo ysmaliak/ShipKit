@@ -12,7 +12,7 @@ public struct ButtonConfiguration {
     public let background: Color
     public let foreground: Color
     public let pressedOpacity: Double
-    
+
     public init(
         font: Font = .title3.weight(.semibold),
         background: Color,
