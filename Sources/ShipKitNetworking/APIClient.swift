@@ -1,5 +1,37 @@
 import Foundation
 
+/// Interface defining the APIClient's capabilities for dependency injection.
+///
+/// This protocol allows for easier testing by defining the required
+/// functionality that can be mocked.
+public protocol APIClientProtocol: Sendable {
+    /// Sends a network request and decodes the response.
+    func send<T: Decodable & Sendable>(
+        _ request: Request<T>,
+        cached: Bool,
+        retryPolicy: RetryPolicy
+    ) async throws -> T
+    
+    /// Uploads data with a network request and decodes the response.
+    func upload<T: Decodable & Sendable>(
+        for request: Request<T>,
+        from data: Data,
+        retryPolicy: RetryPolicy
+    ) async throws -> T
+    
+    /// Downloads data from a URL with retry support.
+    func data(
+        for request: Request<Data>,
+        retryPolicy: RetryPolicy
+    ) async throws -> Data
+    
+    /// Downloads data from a raw URL with retry support.
+    func data(
+        for url: URL,
+        retryPolicy: RetryPolicy
+    ) async throws -> Data
+}
+
 /// An actor that handles network requests with built-in retry and authentication support.
 ///
 /// APIClient provides a type-safe way to make network requests with automatic
@@ -12,7 +44,7 @@ import Foundation
 ///     Request<UserData>(method: .get, path: "/user")
 /// )
 /// ```
-public actor APIClient {
+public actor APIClient: APIClientProtocol {
     /// Global configuration settings for all API clients
     public static var configuration = APIConfiguration()
 

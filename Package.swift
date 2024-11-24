@@ -59,6 +59,7 @@ let package = Package(
         .target(
             name: "ShipKitNetworking",
             dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
             ],
             resources: [
