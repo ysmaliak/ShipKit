@@ -4,10 +4,10 @@ import Foundation
 public struct MultipartDataField: Sendable {
     /// Parameters associated with the field (e.g., name, filename)
     public let parameters: [String: String]
-    
+
     /// The actual data content of the field
     public let data: Data
-    
+
     /// The MIME type of the data, if applicable
     public let mimeType: String?
 
@@ -27,7 +27,7 @@ public struct MultipartDataField: Sendable {
 public struct MultipartData {
     /// Unique boundary string to separate form fields
     private let boundary = "Boundary-\(UUID().uuidString.lowercased())"
-    
+
     /// Accumulated HTTP body data
     private var httpBody = NSMutableData()
 

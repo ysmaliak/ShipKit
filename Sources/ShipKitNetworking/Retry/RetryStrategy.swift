@@ -12,7 +12,7 @@ public protocol RetryStrategy {
     ///   - attempt: The current retry attempt number (1-based)
     /// - Returns: `true` if the request should be retried, `false` otherwise
     func shouldRetry(_ error: Error, attempt: Int) -> Bool
-    
+
     /// Calculates the delay duration before the next retry attempt.
     /// - Parameter attempt: The current retry attempt number (1-based)
     /// - Returns: The time interval to wait before the next retry
@@ -28,10 +28,10 @@ public protocol RetryStrategy {
 public struct DefaultRetryStrategy: RetryStrategy {
     /// Base delay for the first retry attempt
     private let baseDelay: TimeInterval
-    
+
     /// Multiplier applied to the delay for each subsequent retry
     private let multiplier: Double
-    
+
     /// Set of HTTP status codes that should trigger a retry
     private let retryableStatusCodes: Set<Int>
 

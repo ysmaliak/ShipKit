@@ -4,7 +4,7 @@ import Foundation
 public enum APIError: Error, LocalizedError {
     /// Indicates the response received was invalid or couldn't be parsed
     case invalidResponse
-    
+
     /// Indicates an HTTP error occurred with associated response and data
     /// - response: The HTTP response containing status code and headers
     /// - data: Raw response data that might contain error details

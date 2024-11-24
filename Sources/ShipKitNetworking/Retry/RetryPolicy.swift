@@ -16,10 +16,10 @@ import Foundation
 public struct RetryPolicy {
     /// The strategy that determines the delay between retry attempts
     public var strategy: RetryStrategy
-    
+
     /// Maximum number of retry attempts allowed
     public var maxRetries: Int
-    
+
     /// Current number of retry attempts made
     public var currentAttempt: Int
 
