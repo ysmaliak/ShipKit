@@ -29,6 +29,18 @@ public struct MailComposerFeature: Sendable {
 
         /// The body content of the email
         public let body: String
+
+        /// Creates a new mail composer state with the specified values.
+        ///
+        /// - Parameters:
+        ///   - recipient: The email address of the recipient
+        ///   - subject: The subject line of the email
+        ///   - body: The body content of the email
+        public init(recipient: String, subject: String, body: String) {
+            self.recipient = recipient
+            self.subject = subject
+            self.body = body
+        }
     }
 
     /// Actions that can be performed in the mail composer.
@@ -36,6 +48,9 @@ public struct MailComposerFeature: Sendable {
         /// Triggered when the mail composer should be dismissed
         case dismiss
     }
+
+    /// Creates a new mail composer reducer.
+    public init() {}
 
     /// Dependency for dismissing the mail composer
     @Dependency(\.dismiss) private var dismiss

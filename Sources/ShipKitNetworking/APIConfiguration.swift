@@ -49,4 +49,26 @@ public struct APIConfiguration {
     /// Controls how responses are cached and when cached responses are used.
     /// Defaults to the shared system cache.
     public var cache: URLCache = .shared
+
+    /// Creates a new API configuration with the specified settings.
+    ///
+    /// - Parameters:
+    ///   - baseURL: The base URL for all network requests.
+    ///   - urlSessionConfiguration: The URL session configuration.
+    ///   - decoder: The JSON decoder.
+    ///   - encoder: The JSON encoder.
+    ///   - cache: The URL cache.
+    public init(
+        baseURL: URL? = nil,
+        urlSessionConfiguration: URLSessionConfiguration = .default,
+        decoder: JSONDecoder = .iso8601,
+        encoder: JSONEncoder = .iso8601,
+        cache: URLCache = .shared
+    ) {
+        self.baseURL = baseURL
+        self.urlSessionConfiguration = urlSessionConfiguration
+        self.decoder = decoder
+        self.encoder = encoder
+        self.cache = cache
+    }
 }

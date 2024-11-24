@@ -77,6 +77,13 @@ struct CapsuleButtonStyle: ButtonStyle {
     /// The configuration for the button's appearance.
     public let buttonConfiguration: ButtonConfiguration
 
+    /// Creates a new capsule button style with the specified configuration.
+    ///
+    /// - Parameter buttonConfiguration: The configuration for the button's appearance.
+    public init(buttonConfiguration: ButtonConfiguration) {
+        self.buttonConfiguration = buttonConfiguration
+    }
+
     /// Tracks the pressed state of the button for animation.
     @State private var isPressed = false
 

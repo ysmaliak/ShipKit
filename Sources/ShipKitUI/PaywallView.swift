@@ -71,6 +71,46 @@ public struct PaywallFeature: Sendable {
 
         /// The current destination (alert) being presented
         @Presents public var destination: Destination.State?
+
+        /// Creates a new paywall state with the specified values.
+        ///
+        /// - Parameters:
+        ///   - isPremiumUser: Whether the user currently has premium access
+        ///   - premiumEntitlement: The identifier for the premium entitlement in RevenueCat
+        ///   - privacyPolicyURL: URL to the privacy policy
+        ///   - termsOfServiceURL: URL to the terms of service
+        ///   - showSavePercentBadge: Whether to show the save percentage badge on packages
+        ///   - currentOffering: The current RevenueCat offering being displayed
+        ///   - selectedPackage: The currently selected package
+        ///   - isLoadingOffering: Whether the offering is currently loading
+        ///   - isSubscribeButtonLoading: Whether the subscribe button is currently loading
+        ///   - isRestoreButtonLoading: Whether the restore button is currently loading
+        ///   - destination: The current destination (alert) being presented
+        public init(
+            isPremiumUser: Bool,
+            premiumEntitlement: String,
+            privacyPolicyURL: URL,
+            termsOfServiceURL: URL,
+            showSavePercentBadge: Bool = true,
+            currentOffering: Offering? = nil,
+            selectedPackage: Package? = nil,
+            isLoadingOffering: Bool = false,
+            isSubscribeButtonLoading: Bool = false,
+            isRestoreButtonLoading: Bool = false,
+            destination: Destination.State? = nil
+        ) {
+            self.isPremiumUser = isPremiumUser
+            self.premiumEntitlement = premiumEntitlement
+            self.privacyPolicyURL = privacyPolicyURL
+            self.termsOfServiceURL = termsOfServiceURL
+            self.showSavePercentBadge = showSavePercentBadge
+            self.currentOffering = currentOffering
+            self.selectedPackage = selectedPackage
+            self.isLoadingOffering = isLoadingOffering
+            self.isSubscribeButtonLoading = isSubscribeButtonLoading
+            self.isRestoreButtonLoading = isRestoreButtonLoading
+            self.destination = destination
+        }
     }
 
     /// Actions that can be performed in the paywall
@@ -105,6 +145,9 @@ public struct PaywallFeature: Sendable {
         /// Delegate action
         case delegate(Delegate)
     }
+
+    /// Creates a new paywall reducer.
+    public init() {}
 
     @Dependency(\.purchases) private var purchases
 

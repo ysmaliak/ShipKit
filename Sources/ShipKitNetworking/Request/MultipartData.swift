@@ -31,6 +31,8 @@ public struct MultipartData {
     /// Accumulated HTTP body data
     private var httpBody = NSMutableData()
 
+    public init() {}
+
     /// Adds a data field to the form
     /// - Parameter field: The field to add
     public func addDataField(_ field: MultipartDataField) {
