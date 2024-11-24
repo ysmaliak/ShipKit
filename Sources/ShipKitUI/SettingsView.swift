@@ -8,6 +8,61 @@ import ShipKitCore
 import StoreKit
 import SwiftUI
 
+/// Configuration for the email feedback feature.
+///
+/// This struct encapsulates all the necessary information for pre-filling
+/// a feedback email when users select the feedback option in settings.
+///
+/// Example usage:
+/// ```swift
+/// let config = EmailConfiguration(
+///     recipient: "support@example.com",
+///     subject: "App Feedback",
+///     body: "Please describe your feedback:"
+/// )
+/// ```
+public struct EmailConfiguration: Equatable {
+    /// The email address that will receive the feedback.
+    ///
+    /// This should typically be a support or feedback email address
+    /// that is actively monitored.
+    public var recipient: String
+
+    /// The pre-filled subject line of the feedback email.
+    ///
+    /// Consider including the app name or specific feedback category
+    /// to help with email organization.
+    public var subject: String
+
+    /// The pre-filled body content of the feedback email.
+    ///
+    /// This can include:
+    /// - Instructions for the user
+    /// - Template for feedback structure
+    /// - Placeholder text
+    /// - App version information
+    public var body: String
+
+    /// Creates a new email configuration.
+    ///
+    /// - Parameters:
+    ///   - recipient: The email address to receive feedback
+    ///   - subject: The pre-filled subject line
+    ///   - body: The pre-filled email body content
+    public init(
+        recipient: String,
+        subject: String,
+        body: String
+    ) {
+        self.recipient = recipient
+        self.subject = subject
+        self.body = body
+    }
+}
+
+/// Represents different sections in the settings view.
+///
+/// Used to organize settings items into logical groups.
 public enum SettingsSection: String, CaseIterable {
     case appearance
     case feedback
@@ -15,7 +70,12 @@ public enum SettingsSection: String, CaseIterable {
     case legal
 }
 
+/// Represents a single item in the settings menu.
+///
+/// Each item has a type, section, and indicator state that determines
+/// its appearance and behavior in the settings list.
 public struct SettingsItem: Identifiable, Equatable, Hashable {
+    /// Defines the different types of settings items available.
     public enum ItemType: Identifiable, Hashable {
         case sendFeedback
         case rateAndReview
@@ -26,9 +86,14 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
         public var id: Self { self }
     }
 
+    /// Defines the different types of indicators that can appear
+    /// next to a settings item.
     public enum Indicator: Equatable, Hashable {
+        /// Shows a symbol (e.g., arrow, checkmark)
         case symbol(SFSymbol)
+        /// Shows no indicator
         case none
+        /// Shows a progress indicator
         case progress
     }
 
@@ -37,12 +102,18 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
     public let section: SettingsSection
     public var indicator: Indicator
 
+    /// Creates a new settings item.
+    /// - Parameters:
+    ///   - type: The type of settings item
+    ///   - section: The section this item belongs to
+    ///   - indicator: The indicator to show next to the item
     public init(type: ItemType, section: SettingsSection, indicator: Indicator) {
         self.type = type
         self.section = section
         self.indicator = indicator
     }
 
+    /// The localized title for the settings item.
     var title: String {
         switch type {
         case .sendFeedback:
@@ -58,6 +129,7 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
         }
     }
 
+    /// The SF Symbol to display for the settings item.
     var symbol: SFSymbol {
         switch type {
         case .sendFeedback: .envelope
@@ -69,22 +141,26 @@ public struct SettingsItem: Identifiable, Equatable, Hashable {
     }
 }
 
+/// A reducer that manages settings functionality.
+///
+/// Handles user interactions with settings items, including:
+/// - Sending feedback
+/// - Rating the app
+/// - Restoring purchases
+/// - Viewing legal documents
 @Reducer
 public struct SettingsFeature: Sendable {
-    public struct EmailConfiguration: Equatable {
-        public var recipient: String
-        public var subject: String
-        public var body: String
-    }
-
+    /// Possible destinations (sheets/alerts) in the settings view.
     @Reducer
     public enum Destination {
         case alert(AlertState<SettingsFeature.Action.Alert>)
         case mailComposer(MailComposerFeature)
     }
 
+    /// The state for the settings feature.
     @ObservableState
     public struct State {
+        /// Array of all settings items
         public var settingsItems: IdentifiedArrayOf<SettingsItem> = [
             SettingsItem(type: .sendFeedback, section: .feedback, indicator: .none),
             SettingsItem(type: .rateAndReview, section: .feedback, indicator: .none),
@@ -92,14 +168,29 @@ public struct SettingsFeature: Sendable {
             SettingsItem(type: .privacyPolicy, section: .legal, indicator: .symbol(.arrowUpRight)),
             SettingsItem(type: .termsOfService, section: .legal, indicator: .symbol(.arrowUpRight))
         ]
+
+        /// Whether the user has premium access
         public var isPremiumUser = false
+
+        /// The identifier for the premium entitlement
         public let premiumEntitlement: String
+
+        /// Configuration for the feedback email
         public let emailConfiguration: EmailConfiguration
+
+        /// The App Store ID for ratings
         public let appID: String
+
+        /// URL to the privacy policy
         public let privacyPolicyURL: URL
+
+        /// URL to the terms of service
         public let termsOfServiceURL: URL
+
+        /// The current destination being presented
         @Presents public var destination: Destination.State?
 
+        /// Settings items grouped by section, filtered based on user status.
         var groupedSettingsItems: [SettingsSection: [SettingsItem]] {
             let filteredItems = settingsItems.filter { item in
                 if isPremiumUser, item.type == .restorePurchase {
@@ -217,9 +308,18 @@ public struct SettingsFeature: Sendable {
     }
 }
 
+/// A view that displays the settings interface.
+///
+/// Presents a list of settings items organized by section, with support for:
+/// - Item icons and indicators
+/// - Section grouping
+/// - Interactive feedback
+/// - Sheet presentations
 public struct SettingsView: View {
+    /// The store managing the settings state and actions
     @Bindable public var store: StoreOf<SettingsFeature>
 
+    /// Property wrapper for hot reload support
     @ObserveInjection private var inject
 
     public var body: some View {
@@ -253,6 +353,7 @@ public struct SettingsView: View {
 }
 
 public struct SettingsItemView: View {
+    /// The settings item to display
     public let item: SettingsItem
 
     public var body: some View {

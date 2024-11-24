@@ -4,34 +4,34 @@ import Foundation
 public struct Request<Response: Decodable>: Sendable {
     /// The HTTP method for the request (GET, POST, etc.)
     public let method: HTTPMethod
-    
+
     /// The base URL for the request, can be nil if using absoluteURL
     public let baseURL: URL?
-    
+
     /// The path component to be appended to the base URL
     public let path: String
-    
+
     /// An absolute URL for the request, can be nil if using baseURL + path
     public let absoluteURL: URL?
-    
+
     /// The content type of the request (JSON or multipart)
     public let contentType: ContentType
-    
+
     /// Optional query parameters to be added to the URL
     public let query: [String: String]?
-    
+
     /// Optional HTTP headers to be included in the request
     public let headers: [String: String]?
-    
+
     /// Optional body data to be sent with the request
     public let body: Body?
-    
+
     /// Optional timeout interval for the request
     public let timeoutInterval: TimeInterval?
-    
+
     /// Cache policy for the request
     public let cachePolicy: URLRequest.CachePolicy
-    
+
     /// Authentication policy for the request
     public let authenticationPolicy: AuthenticationPolicy
 

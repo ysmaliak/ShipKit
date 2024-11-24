@@ -4,49 +4,105 @@ import RevenueCat
 import RevenueCatUtilities
 import SwiftUI
 
+/// A feature that manages the paywall functionality for in-app purchases.
+///
+/// This reducer handles:
+/// - Loading and displaying available subscription packages
+/// - Processing purchases and restores
+/// - Managing loading states and errors
+/// - Handling user selection and purchase flow
+///
+/// Example usage:
+/// ```swift
+/// let store = Store(initialState: PaywallFeature.State(
+///     isPremiumUser: false,
+///     premiumEntitlement: "premium",
+///     privacyPolicyURL: privacyURL,
+///     termsOfServiceURL: termsURL
+/// )) {
+///     PaywallFeature()
+/// }
+/// ```
 @Reducer
 public struct PaywallFeature: Sendable {
+    /// Possible destinations (alerts) that can be presented in the paywall
     @Reducer
     public enum Destination {
         case alert(AlertState<PaywallFeature.Action.Alert>)
     }
 
+    /// The state for the paywall feature
     @ObservableState
     public struct State {
+        /// Whether the user currently has premium access
         public var isPremiumUser: Bool
+
+        /// The identifier for the premium entitlement in RevenueCat
         public let premiumEntitlement: String
+
+        /// URL to the privacy policy
         public let privacyPolicyURL: URL
+
+        /// URL to the terms of service
         public let termsOfServiceURL: URL
+
+        /// Whether to show the save percentage badge on packages
         public var showSavePercentBadge = true
+
+        /// The current RevenueCat offering being displayed
         public var currentOffering: Offering?
+
+        /// The currently selected package
         public var selectedPackage: Package?
+
+        /// Loading state for the offering
         public var isLoadingOffering = false
+
+        /// Loading state for the subscribe button
         public var isSubscribeButtonLoading = false
+
+        /// Loading state for the restore button
         public var isRestoreButtonLoading = false
 
+        /// Whether there are any packages available to display
         public var isPackagesEmpty: Bool {
             currentOffering?.availablePackages.isEmpty == true || currentOffering == nil
         }
 
+        /// The current destination (alert) being presented
         @Presents public var destination: Destination.State?
     }
 
+    /// Actions that can be performed in the paywall
     public enum Action {
+        /// Alert-related actions
         public enum Alert {}
 
+        /// Delegate actions for communicating with parent features
         public enum Delegate {
+            /// Notifies that a purchase was completed
             case purchaseCompleted
+            /// Notifies of changes to premium user status
             case premiumUserStatusChanged(Bool)
         }
 
+        /// View appeared
         case onAppear
+        /// Package was selected by user
         case packageSelected(Package)
+        /// Subscribe button was tapped
         case subscribeButtonTapped
+        /// Restore button was tapped
         case restoreButtonTapped
+        /// Offering was loaded from RevenueCat
         case offeringLoaded(Result<Offering?, Error>)
+        /// Purchase was completed
         case purchaseCompleted(Result<CustomerInfo, Error>)
+        /// Restore was completed
         case restoreCompleted(Result<CustomerInfo, Error>)
+        /// Destination (alert) action
         case destination(PresentationAction<Destination.Action>)
+        /// Delegate action
         case delegate(Delegate)
     }
 
@@ -126,6 +182,8 @@ public struct PaywallFeature: Sendable {
         .ifLet(\.$destination, action: \.destination)
     }
 
+    /// Loads the current offering from RevenueCat.
+    /// - Returns: An effect that loads and dispatches the offering result
     private func loadOffering() -> Effect<Action> {
         .run { send in
             await send(.offeringLoaded(Result {
@@ -134,6 +192,9 @@ public struct PaywallFeature: Sendable {
         }
     }
 
+    /// Processes a purchase for the specified package.
+    /// - Parameter package: The package to purchase
+    /// - Returns: An effect that processes and dispatches the purchase result
     private func purchase(package: Package) -> Effect<Action> {
         .run { send in
             await send(.purchaseCompleted(Result {
@@ -143,6 +204,8 @@ public struct PaywallFeature: Sendable {
         }
     }
 
+    /// Restores previous purchases from RevenueCat.
+    /// - Returns: An effect that restores and dispatches the result
     private func restore() -> Effect<Action> {
         .run { send in
             await send(.restoreCompleted(Result {
@@ -152,11 +215,32 @@ public struct PaywallFeature: Sendable {
     }
 }
 
+/// A view that displays the paywall interface for in-app purchases.
+///
+/// This view presents:
+/// - Custom content (header/description)
+/// - Available subscription packages
+/// - Subscribe button
+/// - Restore purchases button
+/// - Terms and privacy policy links
+///
+/// Example usage:
+/// ```swift
+/// PaywallView(store: store, subscribeButtonStyle: .capsule) {
+///     PaywallHeaderView()
+/// }
+/// ```
 public struct PaywallView<Content: View, SubscribeButtonStyle: ButtonStyle>: View {
+    /// The store managing the paywall's state and actions
     @Bindable public var store: StoreOf<PaywallFeature>
+
+    /// The style to apply to the subscribe button
     public let subscribeButtonStyle: SubscribeButtonStyle
+
+    /// The content to display above the packages
     public let content: () -> Content
 
+    /// Property wrapper for hot reload support during development
     @ObserveInjection private var inject
 
     public var body: some View {

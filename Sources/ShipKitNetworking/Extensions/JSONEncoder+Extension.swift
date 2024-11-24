@@ -2,7 +2,7 @@ import Foundation
 
 extension JSONEncoder {
     /// A pre-configured JSONEncoder instance that handles ISO8601 date formats.
-    /// 
+    ///
     /// This encoder is configured to automatically convert Swift Date objects into
     /// ISO8601 formatted date strings. It's particularly useful when working with REST APIs
     /// that expect dates to be formatted according to the ISO8601 standard.
