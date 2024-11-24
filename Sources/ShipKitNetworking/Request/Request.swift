@@ -1,18 +1,52 @@
 import Foundation
 
+/// A type representing an HTTP network request with a strongly-typed response
 public struct Request<Response: Decodable>: Sendable {
+    /// The HTTP method for the request (GET, POST, etc.)
     public let method: HTTPMethod
+    
+    /// The base URL for the request, can be nil if using absoluteURL
     public let baseURL: URL?
+    
+    /// The path component to be appended to the base URL
     public let path: String
+    
+    /// An absolute URL for the request, can be nil if using baseURL + path
     public let absoluteURL: URL?
+    
+    /// The content type of the request (JSON or multipart)
     public let contentType: ContentType
+    
+    /// Optional query parameters to be added to the URL
     public let query: [String: String]?
+    
+    /// Optional HTTP headers to be included in the request
     public let headers: [String: String]?
+    
+    /// Optional body data to be sent with the request
     public let body: Body?
+    
+    /// Optional timeout interval for the request
     public let timeoutInterval: TimeInterval?
+    
+    /// Cache policy for the request
     public let cachePolicy: URLRequest.CachePolicy
+    
+    /// Authentication policy for the request
     public let authenticationPolicy: AuthenticationPolicy
 
+    /// Creates a new request with a base URL and path
+    /// - Parameters:
+    ///   - method: The HTTP method
+    ///   - baseURL: Base URL for the request (defaults to APIClient configuration)
+    ///   - path: Path component to append to base URL
+    ///   - contentType: Type of content being sent
+    ///   - query: Optional query parameters
+    ///   - headers: Optional HTTP headers
+    ///   - body: Optional request body
+    ///   - timeoutInterval: Optional timeout duration
+    ///   - cachePolicy: Cache policy for the request
+    ///   - authenticationPolicy: Authentication policy for the request
     public init(
         method: HTTPMethod,
         baseURL: URL? = APIClient.configuration.baseURL,
@@ -38,6 +72,17 @@ public struct Request<Response: Decodable>: Sendable {
         self.authenticationPolicy = authenticationPolicy
     }
 
+    /// Creates a new request with an absolute URL
+    /// - Parameters:
+    ///   - method: The HTTP method
+    ///   - absoluteURL: Complete URL for the request
+    ///   - contentType: Type of content being sent
+    ///   - query: Optional query parameters
+    ///   - headers: Optional HTTP headers
+    ///   - body: Optional request body
+    ///   - timeoutInterval: Optional timeout duration
+    ///   - cachePolicy: Cache policy for the request
+    ///   - authenticationPolicy: Authentication policy for the request
     init(
         method: HTTPMethod,
         absoluteURL: URL,
@@ -62,6 +107,9 @@ public struct Request<Response: Decodable>: Sendable {
         self.authenticationPolicy = authenticationPolicy
     }
 
+    /// Converts the request into a URLRequest
+    /// - Returns: A configured URLRequest ready to be sent
+    /// - Throws: RequestError if URL construction fails or authentication fails
     public func asURLRequest() async throws -> URLRequest {
         let url: URL = if let absoluteURL {
             absoluteURL
@@ -89,6 +137,10 @@ public struct Request<Response: Decodable>: Sendable {
         }
     }
 
+    /// Creates a URLRequest for JSON content type
+    /// - Parameter url: The URL for the request
+    /// - Returns: A configured URLRequest
+    /// - Throws: Errors from authentication or JSON encoding
     private func asURLRequest(url: URL) async throws -> URLRequest {
         var urlRequest = URLRequest(url: url)
 
@@ -122,6 +174,9 @@ public struct Request<Response: Decodable>: Sendable {
         return urlRequest
     }
 
+    /// Builds a URL from baseURL and path components
+    /// - Returns: A complete URL
+    /// - Throws: RequestError if URL construction fails
     private func buildURL() throws -> URL {
         guard let baseURL else {
             throw RequestError.missingBaseURL
@@ -150,10 +205,14 @@ public struct Request<Response: Decodable>: Sendable {
 }
 
 extension Request {
+    /// Type constraint for request body data
     public typealias Body = Encodable & Sendable
 
+    /// Represents the content type of the request
     public enum ContentType: Sendable {
+        /// JSON content type
         case json
+        /// Multipart form data content type with fields
         case multipartData([MultipartDataField])
     }
 }
