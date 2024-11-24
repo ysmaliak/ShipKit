@@ -161,13 +161,7 @@ public struct SettingsFeature: Sendable {
     @ObservableState
     public struct State {
         /// Array of all settings items
-        public var settingsItems: IdentifiedArrayOf<SettingsItem> = [
-            SettingsItem(type: .sendFeedback, section: .feedback, indicator: .none),
-            SettingsItem(type: .rateAndReview, section: .feedback, indicator: .none),
-            SettingsItem(type: .restorePurchase, section: .purchase, indicator: .none),
-            SettingsItem(type: .privacyPolicy, section: .legal, indicator: .symbol(.arrowUpRight)),
-            SettingsItem(type: .termsOfService, section: .legal, indicator: .symbol(.arrowUpRight))
-        ]
+        public var settingsItems: IdentifiedArrayOf<SettingsItem>
 
         /// Whether the user has premium access
         public var isPremiumUser = false
@@ -200,6 +194,43 @@ public struct SettingsFeature: Sendable {
             }
             return Dictionary(grouping: filteredItems, by: \.section)
         }
+
+        /// Creates a new settings state with the specified values.
+        ///
+        /// - Parameters:
+        ///   - settingsItems: The settings items to display
+        ///   - isPremiumUser: Whether the user currently has premium access
+        ///   - premiumEntitlement: The identifier for the premium entitlement in RevenueCat
+        ///   - emailConfiguration: The configuration for the feedback email
+        ///   - appID: The App Store ID for ratings
+        ///   - privacyPolicyURL: URL to the privacy policy
+        ///   - termsOfServiceURL: URL to the terms of service
+        ///   - destination: The current destination (alert) being presented
+        public init(
+            settingsItems: IdentifiedArrayOf<SettingsItem> = [
+                SettingsItem(type: .sendFeedback, section: .feedback, indicator: .none),
+                SettingsItem(type: .rateAndReview, section: .feedback, indicator: .none),
+                SettingsItem(type: .restorePurchase, section: .purchase, indicator: .none),
+                SettingsItem(type: .privacyPolicy, section: .legal, indicator: .symbol(.arrowUpRight)),
+                SettingsItem(type: .termsOfService, section: .legal, indicator: .symbol(.arrowUpRight))
+            ],
+            isPremiumUser: Bool = false,
+            premiumEntitlement: String,
+            emailConfiguration: EmailConfiguration,
+            appID: String,
+            privacyPolicyURL: URL,
+            termsOfServiceURL: URL,
+            destination: Destination.State? = nil
+        ) {
+            self.settingsItems = settingsItems
+            self.isPremiumUser = isPremiumUser
+            self.premiumEntitlement = premiumEntitlement
+            self.emailConfiguration = emailConfiguration
+            self.appID = appID
+            self.privacyPolicyURL = privacyPolicyURL
+            self.termsOfServiceURL = termsOfServiceURL
+            self.destination = destination
+        }
     }
 
     public enum Action {
@@ -215,6 +246,9 @@ public struct SettingsFeature: Sendable {
         case destination(PresentationAction<Destination.Action>)
         case delegate(Delegate)
     }
+
+    /// Creates a new settings reducer.
+    public init() {}
 
     @Dependency(\.openURL) private var openURL
     @Dependency(\.purchases) private var purchases
@@ -322,6 +356,13 @@ public struct SettingsView: View {
     /// Property wrapper for hot reload support
     @ObserveInjection private var inject
 
+    /// Creates a new settings view.
+    ///
+    /// - Parameter store: The store managing the settings state and actions
+    public init(store: StoreOf<SettingsFeature>) {
+        self.store = store
+    }
+
     public var body: some View {
         listView
             .sheet(item: $store.scope(state: \.destination?.mailComposer, action: \.destination.mailComposer)) {
@@ -356,6 +397,15 @@ public struct SettingsItemView: View {
     /// The settings item to display
     public let item: SettingsItem
 
+    @ObserveInjection private var inject
+
+    /// Creates a new settings item view.
+    ///
+    /// - Parameter item: The settings item to display
+    public init(item: SettingsItem) {
+        self.item = item
+    }
+
     public var body: some View {
         HStack {
             Image(systemSymbol: item.symbol)
@@ -385,5 +435,6 @@ public struct SettingsItemView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .secondary))
             }
         }
+        .enableInjection()
     }
 }

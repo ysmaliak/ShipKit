@@ -64,6 +64,9 @@ public actor APIClient: APIClientProtocol {
     /// Cache for storing and retrieving responses
     private var cache: URLCache { APIClient.configuration.cache }
 
+    /// Creates a new APIClient with the specified configuration.
+    public init() {}
+
     /// Sends a network request and decodes the response.
     ///
     /// - Parameters:

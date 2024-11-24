@@ -83,7 +83,7 @@ public struct Request<Response: Decodable>: Sendable {
     ///   - timeoutInterval: Optional timeout duration
     ///   - cachePolicy: Cache policy for the request
     ///   - authenticationPolicy: Authentication policy for the request
-    init(
+    public init(
         method: HTTPMethod,
         absoluteURL: URL,
         contentType: ContentType,
