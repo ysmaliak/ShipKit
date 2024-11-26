@@ -54,6 +54,9 @@ let package = Package(
             ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
+            ],
+            plugins: [
+                .plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
             ]
         ),
         .target(
