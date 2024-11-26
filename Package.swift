@@ -49,7 +49,6 @@ let package = Package(
             name: "ShipKitCore",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin"),
                 .product(name: "RevenueCatUtilities", package: "RevenueCatUtilities")
             ],
             resources: [
@@ -62,11 +61,13 @@ let package = Package(
         .target(
             name: "ShipKitNetworking",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
+            ],
+            plugins: [
+                .plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
             ]
         ),
         .target(
@@ -74,12 +75,14 @@ let package = Package(
             dependencies: [
                 "ShipKitCore",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin"),
                 .product(name: "Inject", package: "Inject"),
                 .product(name: "SFSafeSymbols", package: "SFSafeSymbols")
             ],
             resources: [
                 .process("Resources/Localizable.xcstrings")
+            ],
+            plugins: [
+                .plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
             ]
         )
     ]
