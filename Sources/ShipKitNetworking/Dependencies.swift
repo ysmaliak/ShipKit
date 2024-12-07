@@ -1,10 +1,10 @@
 import ComposableArchitecture
-import Foundation
+import NetworkKit
 
 /// A dependency key for accessing the APIClient in TCA reducers.
 private enum APIClientKey: DependencyKey {
     /// The default value provides a live APIClient instance.
-    static let liveValue: APIClient = APIClient()
+    static let liveValue = APIClient()
 }
 
 extension DependencyValues {

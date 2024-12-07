@@ -34,7 +34,8 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.16.0"),
         .package(url: "https://github.com/krzysztofzablocki/Inject.git", from: "1.5.0"),
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "5.3.0"),
-        .package(url: "https://github.com/liamnichols/xcstrings-tool-plugin.git", from: "1.0.0")
+        .package(url: "https://github.com/liamnichols/xcstrings-tool-plugin.git", from: "1.0.0"),
+        .package(url: "https://github.com/ysmaliak/NetworkKit.git", from: "1.0.0")
     ],
     targets: [
         .target(
@@ -61,13 +62,8 @@ let package = Package(
         .target(
             name: "ShipKitNetworking",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            resources: [
-                .process("Resources/Localizable.xcstrings")
-            ],
-            plugins: [
-                .plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "NetworkKit", package: "NetworkKit")
             ]
         ),
         .target(
