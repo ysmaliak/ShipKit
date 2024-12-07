@@ -1,5 +1,5 @@
 {
-  "originHash" : "3a987da3b371fb77d77b2a7af090de5c1892e7e46d8b1f9c4dff24f8f513c1db",
+  "originHash" : "fb3ba79999877d8077a8af25b4fa006aba48afe536b6d6789a4e28e48c167cac",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -24,7 +24,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/NetworkKit.git",
       "state" : {
-        "revision" : "b7b52345e910ca69f85b41dfdc3b2cacb78c0aaa",
+        "revision" : "187e4878870a927166e26ddbc8a71f3ad1badea2",
         "version" : "1.0.0"
       }
     },
