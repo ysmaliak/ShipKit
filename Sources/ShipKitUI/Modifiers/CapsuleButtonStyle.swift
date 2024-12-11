@@ -91,7 +91,7 @@ struct CapsuleButtonStyle: ButtonStyle {
     ///
     /// - Parameter configuration: The button's configuration provided by SwiftUI.
     /// - Returns: A styled view containing the button's label.
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(buttonConfiguration.font)
             .multilineTextAlignment(.center)

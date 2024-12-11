@@ -15,7 +15,6 @@ import SwiftUI
 /// Example usage:
 /// ```swift
 /// let store = Store(initialState: PaywallFeature.State(
-///     isPremiumUser: false,
 ///     premiumEntitlement: "premium",
 ///     privacyPolicyURL: privacyURL,
 ///     termsOfServiceURL: termsURL
@@ -34,17 +33,14 @@ public struct PaywallFeature: Sendable {
     /// The state for the paywall feature
     @ObservableState
     public struct State {
-        /// Whether the user currently has premium access
-        public var isPremiumUser: Bool
-
         /// The identifier for the premium entitlement in RevenueCat
-        public let premiumEntitlement: String
+        public let premiumEntitlement: String?
 
         /// URL to the privacy policy
-        public let privacyPolicyURL: URL
+        public let privacyPolicyURL: URL?
 
         /// URL to the terms of service
-        public let termsOfServiceURL: URL
+        public let termsOfServiceURL: URL?
 
         /// Whether to show the save percentage badge on packages
         public var showSavePercentBadge = true
@@ -75,7 +71,6 @@ public struct PaywallFeature: Sendable {
         /// Creates a new paywall state with the specified values.
         ///
         /// - Parameters:
-        ///   - isPremiumUser: Whether the user currently has premium access
         ///   - premiumEntitlement: The identifier for the premium entitlement in RevenueCat
         ///   - privacyPolicyURL: URL to the privacy policy
         ///   - termsOfServiceURL: URL to the terms of service
@@ -87,10 +82,9 @@ public struct PaywallFeature: Sendable {
         ///   - isRestoreButtonLoading: Whether the restore button is currently loading
         ///   - destination: The current destination (alert) being presented
         public init(
-            isPremiumUser: Bool,
-            premiumEntitlement: String,
-            privacyPolicyURL: URL,
-            termsOfServiceURL: URL,
+            premiumEntitlement: String? = ShipKitUIManager.configuration.premiumEntitlement,
+            privacyPolicyURL: URL? = ShipKitUIManager.configuration.privacyPolicyURL,
+            termsOfServiceURL: URL? = ShipKitUIManager.configuration.termsOfServiceURL,
             showSavePercentBadge: Bool = true,
             currentOffering: Offering? = nil,
             selectedPackage: Package? = nil,
@@ -99,7 +93,6 @@ public struct PaywallFeature: Sendable {
             isRestoreButtonLoading: Bool = false,
             destination: Destination.State? = nil
         ) {
-            self.isPremiumUser = isPremiumUser
             self.premiumEntitlement = premiumEntitlement
             self.privacyPolicyURL = privacyPolicyURL
             self.termsOfServiceURL = termsOfServiceURL
@@ -187,12 +180,13 @@ public struct PaywallFeature: Sendable {
             case .purchaseCompleted(.success(let customerInfo)):
                 state.isSubscribeButtonLoading = false
                 state.isRestoreButtonLoading = false
+
+                guard let premiumEntitlement = state.premiumEntitlement else { return .none }
+
                 var premiumUserStatusChangedEffect: Effect<Action> = .none
-                if customerInfo.entitlements[state.premiumEntitlement]?.isActive == true {
-                    state.isPremiumUser = true
+                if customerInfo.entitlements[premiumEntitlement]?.isActive == true {
                     premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(true)))
                 } else {
-                    state.isPremiumUser = false
                     premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(false)))
                     state.destination = .alert(.error(PurchaseError.noActiveEntitlement))
                 }
@@ -201,12 +195,13 @@ public struct PaywallFeature: Sendable {
             case .restoreCompleted(.success(let customerInfo)):
                 state.isSubscribeButtonLoading = false
                 state.isRestoreButtonLoading = false
+
+                guard let premiumEntitlement = state.premiumEntitlement else { return .none }
+
                 var premiumUserStatusChangedEffect: Effect<Action> = .none
-                if customerInfo.entitlements[state.premiumEntitlement]?.isActive == true {
-                    state.isPremiumUser = true
+                if customerInfo.entitlements[premiumEntitlement]?.isActive == true {
                     premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(true)))
                 } else {
-                    state.isPremiumUser = false
                     premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(false)))
                     state.destination = .alert(.error(PurchaseError.noActiveEntitlement))
                 }
@@ -273,15 +268,24 @@ public struct PaywallFeature: Sendable {
 ///     PaywallHeaderView()
 /// }
 /// ```
-public struct PaywallView<Content: View, SubscribeButtonStyle: ButtonStyle>: View {
+public struct PaywallView<Content: View>: View {
     /// The store managing the paywall's state and actions
     @Bindable public var store: StoreOf<PaywallFeature>
 
-    /// The style to apply to the subscribe button
-    public let subscribeButtonStyle: SubscribeButtonStyle
-
     /// The content to display above the packages
     public let content: () -> Content
+
+    /// Creates a new paywall view
+    /// - Parameters:
+    ///   - store: The store managing the paywall's state and actions
+    ///   - content: The content to display above the packages
+    public init(
+        store: StoreOf<PaywallFeature>,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.store = store
+        self.content = content
+    }
 
     /// Property wrapper for hot reload support during development
     @ObserveInjection private var inject
@@ -330,8 +334,10 @@ public struct PaywallView<Content: View, SubscribeButtonStyle: ButtonStyle>: Vie
                             .padding(.top, 6)
                     }
 
-                    LinksView(privacyPolicyURL: store.privacyPolicyURL, termsOfServiceURL: store.termsOfServiceURL)
-                        .padding(.top, 20)
+                    if let privacyPolicyURL = store.privacyPolicyURL, let termsOfServiceURL = store.termsOfServiceURL {
+                        LinksView(privacyPolicyURL: privacyPolicyURL, termsOfServiceURL: termsOfServiceURL)
+                            .padding(.top, 20)
+                    }
                 }
                 .padding(.top, 8)
                 .padding(.horizontal)
@@ -418,7 +424,6 @@ public struct PaywallView<Content: View, SubscribeButtonStyle: ButtonStyle>: Vie
                     }
                 }
             }
-            .buttonStyle(subscribeButtonStyle)
             .opacity(store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading ? 0.8 : 1.0)
             .disabled(store.isSubscribeButtonLoading || store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading)
         }
