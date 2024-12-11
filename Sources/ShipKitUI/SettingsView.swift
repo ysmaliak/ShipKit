@@ -167,19 +167,19 @@ public struct SettingsFeature: Sendable {
         public var isPremiumUser = false
 
         /// The identifier for the premium entitlement
-        public let premiumEntitlement: String
+        public let premiumEntitlement: String?
 
         /// Configuration for the feedback email
         public let emailConfiguration: EmailConfiguration
 
         /// The App Store ID for ratings
-        public let appID: String
+        public let appID: String?
 
         /// URL to the privacy policy
-        public let privacyPolicyURL: URL
+        public let privacyPolicyURL: URL?
 
         /// URL to the terms of service
-        public let termsOfServiceURL: URL
+        public let termsOfServiceURL: URL?
 
         /// The current destination being presented
         @Presents public var destination: Destination.State?
@@ -215,11 +215,11 @@ public struct SettingsFeature: Sendable {
                 SettingsItem(type: .termsOfService, section: .legal, indicator: .symbol(.arrowUpRight))
             ],
             isPremiumUser: Bool = false,
-            premiumEntitlement: String,
+            premiumEntitlement: String? = ShipKitUIManager.configuration.premiumEntitlement,
             emailConfiguration: EmailConfiguration,
-            appID: String,
-            privacyPolicyURL: URL,
-            termsOfServiceURL: URL,
+            appID: String? = ShipKitUIManager.configuration.appID,
+            privacyPolicyURL: URL? = ShipKitUIManager.configuration.privacyPolicyURL,
+            termsOfServiceURL: URL? = ShipKitUIManager.configuration.termsOfServiceURL,
             destination: Destination.State? = nil
         ) {
             self.settingsItems = settingsItems
@@ -263,17 +263,20 @@ public struct SettingsFeature: Sendable {
                     return checkMailComposer()
 
                 case .rateAndReview:
-                    return openReviewURL(appID: state.appID)
+                    guard let appID = state.appID else { return .none }
+                    return openReviewURL(appID: appID)
 
                 case .restorePurchase:
                     state.settingsItems[id: id]?.indicator = .progress
                     return restorePurchase()
 
                 case .privacyPolicy:
-                    return .run { [privacyPolicyURL = state.privacyPolicyURL] _ in await openURL(privacyPolicyURL) }
+                    guard let privacyPolicyURL = state.privacyPolicyURL else { return .none }
+                    return .run { _ in await openURL(privacyPolicyURL) }
 
                 case .termsOfService:
-                    return .run { [termsOfServiceURL = state.termsOfServiceURL] _ in await openURL(termsOfServiceURL) }
+                    guard let termsOfServiceURL = state.termsOfServiceURL else { return .none }
+                    return .run { _ in await openURL(termsOfServiceURL) }
                 }
 
             case .mailComposerCheckCompleted(let canSendMail):
@@ -293,7 +296,7 @@ public struct SettingsFeature: Sendable {
                     state.settingsItems[index].indicator = .none
                 }
                 var premiumUserStatusChangedEffect: Effect<Action> = .none
-                if customerInfo.entitlements[state.premiumEntitlement]?.isActive == true {
+                if let premiumEntitlement = state.premiumEntitlement, customerInfo.entitlements[premiumEntitlement]?.isActive == true {
                     state.isPremiumUser = true
                     premiumUserStatusChangedEffect = .send(.delegate(.premiumUserStatusChanged(true)))
                     state.destination = .alert(AlertState(
