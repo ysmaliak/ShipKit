@@ -35,7 +35,7 @@ let package = Package(
         .package(url: "https://github.com/krzysztofzablocki/Inject.git", from: "1.5.0"),
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "5.3.0"),
         .package(url: "https://github.com/liamnichols/xcstrings-tool-plugin.git", from: "1.0.0"),
-        .package(url: "https://github.com/ysmaliak/NetworkKit.git", from: "1.0.0")
+        .package(url: "https://github.com/ysmaliak/NetworkKit.git", from: "1.1.0")
     ],
     targets: [
         .target(
