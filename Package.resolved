@@ -1,5 +1,5 @@
 {
-  "originHash" : "2d44ac21d9f4e0bde5fb8e1901727b3a56fc25237cc1074ad45e8d24b44e33a0",
+  "originHash" : "1b164de32921ac1c1763fd44637ebdb90d77e0e1f569cd73aea2c1fcfbe61dbe",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -11,21 +11,12 @@
       }
     },
     {
-      "identity" : "inject",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/krzysztofzablocki/Inject.git",
-      "state" : {
-        "revision" : "728c56639ecb3df441d51d5bc6747329afabcfc9",
-        "version" : "1.5.2"
-      }
-    },
-    {
       "identity" : "networkkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/NetworkKit.git",
       "state" : {
-        "revision" : "5b70485b9a73bf764aad9972b7f53810541e1b87",
-        "version" : "1.1.0"
+        "revision" : "470647e7fcf4f6adc14e76c0a06f9744b245d311",
+        "version" : "1.0.0"
       }
     },
     {
@@ -33,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "430ebbf47810b26e7cfbf219196d16f054612a35",
-        "version" : "5.13.0"
+        "revision" : "27eae63e68557b7866d29c53d8159aa9f2887c2f",
+        "version" : "5.14.0"
       }
     },
     {
@@ -42,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/RevenueCatUtilities.git",
       "state" : {
-        "revision" : "79f178c3c3303ce20baea3a80b3bb22df16ef424",
-        "version" : "1.0.0"
+        "revision" : "34809f7ae8ea6cdb6a3b1989ca25e1a947e97468",
+        "version" : "1.0.1"
       }
     },
     {
@@ -150,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-sharing",
       "state" : {
-        "revision" : "524e1a6868f0c9eebe8002e3f604912865521beb",
-        "version" : "1.0.4"
+        "revision" : "b68bf99b05cb974392f6ffa380351e9b7391e233",
+        "version" : "1.1.0"
       }
     },
     {

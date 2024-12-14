@@ -1,4 +1,3 @@
-import Inject
 import RevenueCat
 import SwiftUI
 
@@ -40,9 +39,6 @@ public struct PackageOptionView: View {
     /// Tracks the height of the discount badge for layout
     @State private var discountBadgeHeight: CGFloat = 0
 
-    /// Property wrapper for hot reload support during development
-    @ObserveInjection private var inject
-
     /// Creates a new package option view.
     ///
     /// - Parameters:
@@ -77,7 +73,7 @@ public struct PackageOptionView: View {
 
             VStack(alignment: .trailing, spacing: 6) {
                 if let discount = discountPercentage, discount >= 5 {
-                    Text(String(localizable: .savePercent(String(Int(round(discount))))))
+                    Text(.localizable(.savePercent(String(Int(round(discount))))))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.primary)
@@ -127,6 +123,5 @@ public struct PackageOptionView: View {
             isCheckmarkVisible = isSelected
             checkmarkScale = isSelected ? 1 : 0.5
         }
-        .enableInjection()
     }
 }

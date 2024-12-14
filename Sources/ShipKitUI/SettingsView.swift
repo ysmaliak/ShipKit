@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import Inject
 import MessageUI
 import RevenueCat
 import RevenueCatUtilities
@@ -356,9 +355,6 @@ public struct SettingsView: View {
     /// The store managing the settings state and actions
     @Bindable public var store: StoreOf<SettingsFeature>
 
-    /// Property wrapper for hot reload support
-    @ObserveInjection private var inject
-
     /// Creates a new settings view.
     ///
     /// - Parameter store: The store managing the settings state and actions
@@ -372,7 +368,6 @@ public struct SettingsView: View {
                 MailComposerView(store: $0)
             }
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
-            .enableInjection()
     }
 
     @ViewBuilder
@@ -399,8 +394,6 @@ public struct SettingsView: View {
 public struct SettingsItemView: View {
     /// The settings item to display
     public let item: SettingsItem
-
-    @ObserveInjection private var inject
 
     /// Creates a new settings item view.
     ///
@@ -438,6 +431,5 @@ public struct SettingsItemView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .secondary))
             }
         }
-        .enableInjection()
     }
 }

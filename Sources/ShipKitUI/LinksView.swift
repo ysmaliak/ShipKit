@@ -1,4 +1,3 @@
-import Inject
 import SwiftUI
 
 /// A view that displays Privacy Policy and Terms of Service links.
@@ -19,16 +18,12 @@ import SwiftUI
 /// - Uses secondary color for text
 /// - Centers the text
 /// - Applies caption font size
-/// - Supports hot reloading during development
 public struct LinksView: View {
     /// URL for the Privacy Policy document.
     public let privacyPolicyURL: URL
 
     /// URL for the Terms of Service document.
     public let termsOfServiceURL: URL
-
-    /// Property wrapper for hot reload support during development.
-    @ObserveInjection private var inject
 
     /// Creates a new LinksView instance.
     ///
@@ -49,7 +44,6 @@ public struct LinksView: View {
             .tint(.secondary)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
-            .enableInjection()
     }
 
     /// Creates an attributed string containing the formatted links.

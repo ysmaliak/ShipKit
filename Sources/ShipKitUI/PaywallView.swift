@@ -1,7 +1,7 @@
 import ComposableArchitecture
-import Inject
 import RevenueCat
 import RevenueCatUtilities
+import ShipKitCore
 import SwiftUI
 
 /// A feature that manages the paywall functionality for in-app purchases.
@@ -287,15 +287,11 @@ public struct PaywallView<Content: View>: View {
         self.content = content
     }
 
-    /// Property wrapper for hot reload support during development
-    @ObserveInjection private var inject
-
     public var body: some View {
         _content
             .toolbar { toolbar }
             .onAppear { store.send(.onAppear) }
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
-            .enableInjection()
     }
 
     @ViewBuilder
@@ -319,6 +315,8 @@ public struct PaywallView<Content: View>: View {
                     } else {
                         VStack {
                             content()
+
+                            Spacer()
 
                             packagesView
                         }
