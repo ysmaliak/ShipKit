@@ -1,5 +1,5 @@
 {
-  "originHash" : "1b164de32921ac1c1763fd44637ebdb90d77e0e1f569cd73aea2c1fcfbe61dbe",
+  "originHash" : "089350618779372d28b0fbc440334928f5d455ea6d7a5277aa96c001c955deea",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/NetworkKit.git",
       "state" : {
-        "revision" : "470647e7fcf4f6adc14e76c0a06f9744b245d311",
+        "revision" : "5e7e57248bd27ae544b2d72b156601a4692acf3d",
         "version" : "1.0.0"
       }
     },
@@ -34,7 +34,7 @@
       "location" : "https://github.com/ysmaliak/RevenueCatUtilities.git",
       "state" : {
         "revision" : "34809f7ae8ea6cdb6a3b1989ca25e1a947e97468",
-        "version" : "1.0.1"
+        "version" : "1.0.0"
       }
     },
     {

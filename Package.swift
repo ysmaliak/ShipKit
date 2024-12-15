@@ -30,7 +30,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/ysmaliak/RevenueCatUtilities.git", from: "1.0.1"),
+        .package(url: "https://github.com/ysmaliak/RevenueCatUtilities.git", from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.17.0"),
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "5.3.0"),
         .package(url: "https://github.com/liamnichols/xcstrings-tool-plugin.git", from: "1.0.0"),
