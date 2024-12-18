@@ -73,7 +73,7 @@ public struct ButtonConfiguration {
 ///         foreground: .white
 ///     )))
 /// ```
-struct CapsuleButtonStyle: ButtonStyle {
+public struct CapsuleButtonStyle: ButtonStyle {
     /// The configuration for the button's appearance.
     public let buttonConfiguration: ButtonConfiguration
 
@@ -91,7 +91,7 @@ struct CapsuleButtonStyle: ButtonStyle {
     ///
     /// - Parameter configuration: The button's configuration provided by SwiftUI.
     /// - Returns: A styled view containing the button's label.
-    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+    public func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(buttonConfiguration.font)
             .multilineTextAlignment(.center)
@@ -117,7 +117,7 @@ extension ButtonStyle where Self == CapsuleButtonStyle {
     ///
     /// - Parameter configuration: The configuration for the button's appearance.
     /// - Returns: A CapsuleButtonStyle instance.
-    static func capsule(_ configuration: ButtonConfiguration) -> CapsuleButtonStyle {
+    public static func capsule(_ configuration: ButtonConfiguration) -> CapsuleButtonStyle {
         CapsuleButtonStyle(buttonConfiguration: configuration)
     }
 }
