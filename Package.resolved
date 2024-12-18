@@ -1,5 +1,5 @@
 {
-  "originHash" : "089350618779372d28b0fbc440334928f5d455ea6d7a5277aa96c001c955deea",
+  "originHash" : "e674d788a4d03de2891d7379b0346beb0e7392eb552d99928fd78281861ada75",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/NetworkKit.git",
       "state" : {
-        "revision" : "5e7e57248bd27ae544b2d72b156601a4692acf3d",
+        "revision" : "3098787d06bbf05422acb99a73957201f094cbdb",
         "version" : "1.0.0"
       }
     },
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "27eae63e68557b7866d29c53d8159aa9f2887c2f",
-        "version" : "5.14.0"
+        "revision" : "5c413f2ad1888c0bf3910c863c85435fa5e4308d",
+        "version" : "5.14.2"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/RevenueCatUtilities.git",
       "state" : {
-        "revision" : "34809f7ae8ea6cdb6a3b1989ca25e1a947e97468",
-        "version" : "1.0.0"
+        "branch" : "main",
+        "revision" : "80be6d0d7354e83bf93ce309c19fee9094536db4"
       }
     },
     {
