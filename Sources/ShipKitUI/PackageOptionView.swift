@@ -27,6 +27,12 @@ public struct PackageOptionView: View {
     /// Optional discount percentage to display in the badge
     public let discountPercentage: Double?
 
+    /// The foreground color for the package option view
+    public let foregroundColor: Color
+
+    /// The background color for the package option view
+    public let backgroundColor: Color
+
     /// Tracks the visual selection state for animation
     @State private var isColorSelected = false
 
@@ -48,23 +54,27 @@ public struct PackageOptionView: View {
     public init(
         package: Package,
         isSelected: Bool,
-        discountPercentage: Double?
+        discountPercentage: Double?,
+        foregroundColor: Color,
+        backgroundColor: Color
     ) {
         self.package = package
         self.isSelected = isSelected
         self.discountPercentage = discountPercentage
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
     }
 
     public var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(package.storeProduct.localizedTitle)
                     .font(.headline)
-                    .foregroundStyle(Color.primary)
+                    .foregroundStyle(foregroundColor)
 
                 if let description = package.localizedPriceDescription {
                     Text(description)
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -76,12 +86,12 @@ public struct PackageOptionView: View {
                     Text(.localizable(.savePercent(String(Int(round(discount))))))
                         .font(.caption)
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color.primary)
+                        .foregroundStyle(backgroundColor)
                         .padding(.vertical, 4)
                         .padding(.horizontal, 8)
                         .background {
                             RoundedRectangle(cornerRadius: 8)
-                                .fill(Color.primary)
+                                .fill(foregroundColor)
                         }
                         .background {
                             GeometryReader { geometry in
@@ -94,7 +104,7 @@ public struct PackageOptionView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 20, height: 20)
-                    .foregroundColor(Color.primary)
+                    .foregroundColor(foregroundColor)
                     .opacity(isCheckmarkVisible ? 1 : 0)
                     .scaleEffect(checkmarkScale)
             }
@@ -104,7 +114,7 @@ public struct PackageOptionView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .strokeBorder(
-                    isColorSelected ? Color.primary : Color.primary.opacity(0.3),
+                    isColorSelected ? foregroundColor : foregroundColor.opacity(0.3),
                     lineWidth: isColorSelected ? 3 : 1.5
                 )
         }

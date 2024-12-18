@@ -4,6 +4,47 @@ import RevenueCatUtilities
 import ShipKitCore
 import SwiftUI
 
+// Environment keys for paywall colors
+private struct PaywallForegroundColorKey: EnvironmentKey {
+    static let defaultValue: Color = .primary
+}
+
+private struct PaywallBackgroundColorKey: EnvironmentKey {
+    static let defaultValue: Color = .clear
+}
+
+extension EnvironmentValues {
+    var paywallForegroundColor: Color {
+        get { self[PaywallForegroundColorKey.self] }
+        set { self[PaywallForegroundColorKey.self] = newValue }
+    }
+
+    var paywallBackgroundColor: Color {
+        get { self[PaywallBackgroundColorKey.self] }
+        set { self[PaywallBackgroundColorKey.self] = newValue }
+    }
+}
+
+extension PaywallView {
+    /// Sets the foreground color for the paywall content
+    /// - Parameter color: The color to use for text and icons
+    /// - Returns: A view with the modified foreground color
+    public func paywallForegroundColor(_ color: Color) -> PaywallView<Content> {
+        var view = self
+        view._foregroundColor = color
+        return view
+    }
+
+    /// Sets the background color for the paywall view
+    /// - Parameter color: The color to use for the background
+    /// - Returns: A view with the modified background color
+    public func paywallBackgroundColor(_ color: Color) -> PaywallView<Content> {
+        var view = self
+        view._backgroundColor = color
+        return view
+    }
+}
+
 /// A feature that manages the paywall functionality for in-app purchases.
 ///
 /// This reducer handles:
@@ -152,7 +193,9 @@ public struct PaywallFeature: Sendable {
                 return loadOffering()
 
             case .packageSelected(let package):
-                state.selectedPackage = package
+                withAnimation(.smooth) {
+                    state.selectedPackage = package
+                }
                 return .none
 
             case .subscribeButtonTapped:
@@ -275,6 +318,9 @@ public struct PaywallView<Content: View>: View {
     /// The content to display above the packages
     public let content: () -> Content
 
+    private var _foregroundColor: Color = PaywallForegroundColorKey.defaultValue
+    private var _backgroundColor: Color = PaywallBackgroundColorKey.defaultValue
+
     /// Creates a new paywall view
     /// - Parameters:
     ///   - store: The store managing the paywall's state and actions
@@ -290,8 +336,8 @@ public struct PaywallView<Content: View>: View {
     public var body: some View {
         _content
             .toolbar { toolbar }
-            .onAppear { store.send(.onAppear) }
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
+            .onAppear { store.send(.onAppear) }
     }
 
     @ViewBuilder
@@ -301,13 +347,13 @@ public struct PaywallView<Content: View>: View {
                 VStack(spacing: 0) {
                     if store.isLoadingOffering {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                            .progressViewStyle(CircularProgressViewStyle(tint: _foregroundColor))
                             .controlSize(.regular)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if store.isPackagesEmpty {
                         Text(.localizable(.subscriptionPackagesLoadingError))
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(_foregroundColor.opacity(0.7))
                             .multilineTextAlignment(.center)
                             .padding(.top, 16)
                             .padding(.bottom, 64)
@@ -325,12 +371,12 @@ public struct PaywallView<Content: View>: View {
                     subscribeButton
                         .padding(.top, 16)
 
-                    if let package = store.selectedPackage, let intro = package.storeProduct.introductoryDiscount, intro.price == 0 {
-                        Text(.localizable(.noPaymentDueNow))
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .padding(.top, 6)
-                    }
+                    Text(.localizable(.noPaymentDueNow))
+                        .font(.footnote)
+                        .foregroundStyle(_foregroundColor.opacity(0.7))
+                        .padding(.top, 6)
+                        .opacity(store.selectedPackage?.storeProduct.introductoryDiscount?.price == 0 ? 1 : 0)
+                        .animation(.easeInOut, value: store.selectedPackage?.storeProduct.introductoryDiscount?.price)
 
                     if let privacyPolicyURL = store.privacyPolicyURL, let termsOfServiceURL = store.termsOfServiceURL {
                         LinksView(privacyPolicyURL: privacyPolicyURL, termsOfServiceURL: termsOfServiceURL)
@@ -352,12 +398,12 @@ public struct PaywallView<Content: View>: View {
         ToolbarItem(placement: .topBarTrailing) {
             if store.isRestoreButtonLoading {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                    .progressViewStyle(CircularProgressViewStyle(tint: _foregroundColor))
             } else {
                 Button(.localizable(.restore)) {
                     store.send(.restoreButtonTapped)
                 }
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(_foregroundColor)
                 .disabled(
                     store.isSubscribeButtonLoading
                         || store.isLoadingOffering
@@ -372,21 +418,23 @@ public struct PaywallView<Content: View>: View {
     private var packagesView: some View {
         if let offering = store.currentOffering {
             let packages = offering.availablePackages
-            let mostExpensivePrice = packages
-                .map(\.pricePerDay)
-                .max() ?? 0
+            let mostExpensivePrice: Double = packages.compactMap(\.pricePerDay).max() ?? 0.0
 
             VStack(spacing: 10) {
                 ForEach(packages) { package in
-                    let currentPrice = package.pricePerDay
-                    let discount = mostExpensivePrice > 0
-                        ? ((mostExpensivePrice - currentPrice) / mostExpensivePrice) * 100
-                        : 0
+                    let currentPrice = package.pricePerDay ?? 0.0
+                    let discount = mostExpensivePrice > 0.0
+                        ? ((mostExpensivePrice - currentPrice) / mostExpensivePrice) * 100.0
+                        : 0.0
 
                     PackageOptionView(
                         package: package,
                         isSelected: store.selectedPackage == package,
-                        discountPercentage: store.showSavePercentBadge ? (discount > 0 ? discount : nil) : nil
+                        discountPercentage: store.showSavePercentBadge && package.packageType != .lifetime
+                            ? (discount > 0.0 ? discount : nil)
+                            : nil,
+                        foregroundColor: _foregroundColor,
+                        backgroundColor: _backgroundColor
                     )
                     .onTapGesture {
                         store.send(.packageSelected(package))
@@ -405,12 +453,13 @@ public struct PaywallView<Content: View>: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
+                        .foregroundStyle(_backgroundColor)
 
                     if let description = package.localizedPriceDescription {
                         Text(description)
                             .font(.caption)
                             .fontWeight(.regular)
-                            .foregroundStyle(Color.primary.opacity(0.7))
+                            .foregroundStyle(_backgroundColor.opacity(0.7))
                             .multilineTextAlignment(.center)
                     }
                 }
@@ -418,10 +467,11 @@ public struct PaywallView<Content: View>: View {
                 .overlay {
                     if store.isSubscribeButtonLoading {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                            .progressViewStyle(CircularProgressViewStyle(tint: _backgroundColor))
                     }
                 }
             }
+            .buttonStyle(.capsule(ButtonConfiguration(background: _foregroundColor, foreground: _backgroundColor)))
             .opacity(store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading ? 0.8 : 1.0)
             .disabled(store.isSubscribeButtonLoading || store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading)
         }
