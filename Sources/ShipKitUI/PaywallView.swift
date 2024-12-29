@@ -4,47 +4,6 @@ import RevenueCatUtilities
 import ShipKitCore
 import SwiftUI
 
-// Environment keys for paywall colors
-private struct PaywallForegroundColorKey: EnvironmentKey {
-    static let defaultValue: Color = .primary
-}
-
-private struct PaywallBackgroundColorKey: EnvironmentKey {
-    static let defaultValue: Color = .clear
-}
-
-extension EnvironmentValues {
-    var paywallForegroundColor: Color {
-        get { self[PaywallForegroundColorKey.self] }
-        set { self[PaywallForegroundColorKey.self] = newValue }
-    }
-
-    var paywallBackgroundColor: Color {
-        get { self[PaywallBackgroundColorKey.self] }
-        set { self[PaywallBackgroundColorKey.self] = newValue }
-    }
-}
-
-extension PaywallView {
-    /// Sets the foreground color for the paywall content
-    /// - Parameter color: The color to use for text and icons
-    /// - Returns: A view with the modified foreground color
-    public func paywallForegroundColor(_ color: Color) -> PaywallView<Content> {
-        var view = self
-        view._foregroundColor = color
-        return view
-    }
-
-    /// Sets the background color for the paywall view
-    /// - Parameter color: The color to use for the background
-    /// - Returns: A view with the modified background color
-    public func paywallBackgroundColor(_ color: Color) -> PaywallView<Content> {
-        var view = self
-        view._backgroundColor = color
-        return view
-    }
-}
-
 /// A feature that manages the paywall functionality for in-app purchases.
 ///
 /// This reducer handles:
@@ -475,5 +434,45 @@ public struct PaywallView<Content: View>: View {
             .opacity(store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading ? 0.8 : 1.0)
             .disabled(store.isSubscribeButtonLoading || store.isLoadingOffering || store.isPackagesEmpty || store.isRestoreButtonLoading)
         }
+    }
+}
+
+extension PaywallView {
+    /// Sets the foreground color for the paywall content
+    /// - Parameter color: The color to use for text and icons
+    /// - Returns: A view with the modified foreground color
+    public func paywallForegroundColor(_ color: Color) -> PaywallView<Content> {
+        var view = self
+        view._foregroundColor = color
+        return view
+    }
+
+    /// Sets the background color for the paywall view
+    /// - Parameter color: The color to use for the background
+    /// - Returns: A view with the modified background color
+    public func paywallBackgroundColor(_ color: Color) -> PaywallView<Content> {
+        var view = self
+        view._backgroundColor = color
+        return view
+    }
+}
+
+private struct PaywallForegroundColorKey: EnvironmentKey {
+    static let defaultValue: Color = .primary
+}
+
+private struct PaywallBackgroundColorKey: EnvironmentKey {
+    static let defaultValue: Color = .clear
+}
+
+extension EnvironmentValues {
+    var paywallForegroundColor: Color {
+        get { self[PaywallForegroundColorKey.self] }
+        set { self[PaywallForegroundColorKey.self] = newValue }
+    }
+
+    var paywallBackgroundColor: Color {
+        get { self[PaywallBackgroundColorKey.self] }
+        set { self[PaywallBackgroundColorKey.self] = newValue }
     }
 }
