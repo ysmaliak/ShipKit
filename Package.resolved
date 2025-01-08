@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ysmaliak/NetworkKit.git",
       "state" : {
-        "revision" : "6a31c916ce1f80d33d6738fcbafe1665013430ee",
+        "revision" : "03cb03f2e2f007da271633837a83b760be7ac07a",
         "version" : "1.0.0"
       }
     },
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "5d12ca1457689afcb20b7aebdfac3c9f8c8579bf",
-        "version" : "5.14.4"
+        "revision" : "8f62ef8f5be8450d1cd7d38d36afb045f3483852",
+        "version" : "5.14.5"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture.git",
       "state" : {
-        "revision" : "d602618c628e5123f66643437151079d3664970d",
-        "version" : "1.17.0"
+        "revision" : "2ebda6ae2b155a5c3d75aff5f6d25c024bc91311",
+        "version" : "1.17.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-sharing",
       "state" : {
-        "revision" : "974e51b3612317ba5883a73dc9fd9e2409a11f2d",
-        "version" : "1.1.1"
+        "revision" : "641edfa456fa6a927d12137c38fc71cbd9861be0",
+        "version" : "2.1.0"
       }
     },
     {
