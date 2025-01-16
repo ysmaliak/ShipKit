@@ -5,4 +5,5 @@ public struct Configuration {
     public var privacyPolicyURL: URL?
     public var termsOfServiceURL: URL?
     public var appID: String?
+    public var supportEmailConfiguration: EmailConfiguration?
 }

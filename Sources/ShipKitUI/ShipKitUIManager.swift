@@ -7,10 +7,17 @@ public actor ShipKitUIManager {
         ShipKitUIManager.configuration = configuration
     }
 
-    public static func configure(premiumEntitlement: String?, privacyPolicyURL: URL?, termsOfServiceURL: URL?, appID: String?) {
+    public static func configure(
+        premiumEntitlement: String?,
+        privacyPolicyURL: URL?,
+        termsOfServiceURL: URL?,
+        appID: String?,
+        supportEmailConfiguration: EmailConfiguration?
+    ) {
         ShipKitUIManager.configuration.premiumEntitlement = premiumEntitlement
         ShipKitUIManager.configuration.privacyPolicyURL = privacyPolicyURL
         ShipKitUIManager.configuration.termsOfServiceURL = termsOfServiceURL
         ShipKitUIManager.configuration.appID = appID
+        ShipKitUIManager.configuration.supportEmailConfiguration = supportEmailConfiguration
     }
 }

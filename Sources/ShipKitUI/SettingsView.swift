@@ -169,7 +169,7 @@ public struct SettingsFeature: Sendable {
         public let premiumEntitlement: String?
 
         /// Configuration for the feedback email
-        public let emailConfiguration: EmailConfiguration
+        public let supportEmailConfiguration: EmailConfiguration?
 
         /// The App Store ID for ratings
         public let appID: String?
@@ -200,7 +200,7 @@ public struct SettingsFeature: Sendable {
         ///   - settingsItems: The settings items to display
         ///   - isPremiumUser: Whether the user currently has premium access
         ///   - premiumEntitlement: The identifier for the premium entitlement in RevenueCat
-        ///   - emailConfiguration: The configuration for the feedback email
+        ///   - supportEmailConfiguration: The configuration for the feedback email
         ///   - appID: The App Store ID for ratings
         ///   - privacyPolicyURL: URL to the privacy policy
         ///   - termsOfServiceURL: URL to the terms of service
@@ -215,7 +215,7 @@ public struct SettingsFeature: Sendable {
             ],
             isPremiumUser: Bool = false,
             premiumEntitlement: String? = ShipKitUIManager.configuration.premiumEntitlement,
-            emailConfiguration: EmailConfiguration,
+            supportEmailConfiguration: EmailConfiguration? = ShipKitUIManager.configuration.supportEmailConfiguration,
             appID: String? = ShipKitUIManager.configuration.appID,
             privacyPolicyURL: URL? = ShipKitUIManager.configuration.privacyPolicyURL,
             termsOfServiceURL: URL? = ShipKitUIManager.configuration.termsOfServiceURL,
@@ -224,7 +224,7 @@ public struct SettingsFeature: Sendable {
             self.settingsItems = settingsItems
             self.isPremiumUser = isPremiumUser
             self.premiumEntitlement = premiumEntitlement
-            self.emailConfiguration = emailConfiguration
+            self.supportEmailConfiguration = supportEmailConfiguration
             self.appID = appID
             self.privacyPolicyURL = privacyPolicyURL
             self.termsOfServiceURL = termsOfServiceURL
@@ -279,11 +279,11 @@ public struct SettingsFeature: Sendable {
                 }
 
             case .mailComposerCheckCompleted(let canSendMail):
-                if canSendMail {
+                if canSendMail, let supportEmailConfiguration = state.supportEmailConfiguration {
                     state.destination = .mailComposer(MailComposerFeature.State(
-                        recipient: state.emailConfiguration.recipient,
-                        subject: state.emailConfiguration.subject,
-                        body: state.emailConfiguration.body
+                        recipient: supportEmailConfiguration.recipient,
+                        subject: supportEmailConfiguration.subject,
+                        body: supportEmailConfiguration.body
                     ))
                 } else {
                     state.destination = .alert(.error(MailComposerError.failedToCompose))

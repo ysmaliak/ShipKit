@@ -11,6 +11,7 @@ public enum ShipKitManager {
         privacyPolicyURL: URL? = nil,
         termsOfServiceURL: URL? = nil,
         appID: String? = nil,
+        supportEmailConfiguration: EmailConfiguration? = nil,
         baseURL: URL? = nil,
         urlSessionConfiguration: URLSessionConfiguration = .default,
         decoder: JSONDecoder = .iso8601,
@@ -22,7 +23,8 @@ public enum ShipKitManager {
             premiumEntitlement: premiumEntitlement,
             privacyPolicyURL: privacyPolicyURL,
             termsOfServiceURL: termsOfServiceURL,
-            appID: appID
+            appID: appID,
+            supportEmailConfiguration: supportEmailConfiguration
         )
         NetworkManager.configure(
             baseURL: baseURL,
